@@ -13,12 +13,32 @@ import Topbar from '@/components/topbar.vue'
 </script>
 
 <template>
-  <Sidebar />
-  <Topbar />
+  <div class="container">
 
-  <div class="main-content">
-    <RouterView />
+    <div class="content-wrapper">
+      
+      <Sidebar />
+      
+      <div class="main-content">
+        <Topbar />
+        <RouterView />
+      </div>
+      
+    </div>
   </div>
+
 </template>
 
-
+<style>
+.container{
+  width: 95%;
+  margin: 0 auto;
+}
+.content-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
+.main-content{
+  width: 100%;
+}
+</style>
