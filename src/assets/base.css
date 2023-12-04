@@ -60,6 +60,7 @@ button{
   color: var(--white);
   border-radius: 10px;
   border: none;
+  cursor: pointer;
 }
 button.primary{background-color: var(--primary);}
 button.primary:hover{background-color: var(--primary-hvr);}
@@ -71,7 +72,7 @@ button.red{background-color: var(--red);}
 button.red:hover{background-color: var(--red-hvr);}
 button.go-back{color: var(--deep-gray);
 background-color: transparent;}
-button.go-back:hover{color:var(--white);background-color: var(--go-back-hvr);}
+button.go-back:hover{text-decoration: underline;}
 input{
   width: 255px;
   height: 48px;

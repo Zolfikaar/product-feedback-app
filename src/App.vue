@@ -1,15 +1,17 @@
-<script >
-import { RouterView } from 'vue-router'
+<script setup>
+import { useRouter, RouterView } from 'vue-router'
+import { onMounted, ref } from 'vue'
 import Sidebar from '@/components/sidebar.vue'
 import Topbar from '@/components/topbar.vue'
 
-  export default {
-    components: {
-      Sidebar,
-      Topbar
-    }
-    
-  }
+const router = useRouter()
+let showTopbarAndSidebar = ref(true)
+
+router.beforeEach((to, from, next) => {
+  showTopbarAndSidebar.value = to.meta.showTopbarAndSidebar !== false
+  next()
+})
+
 </script>
 
 <template>
@@ -17,10 +19,10 @@ import Topbar from '@/components/topbar.vue'
 
     <div class="content-wrapper">
       
-      <Sidebar />
+      <Sidebar v-if="showTopbarAndSidebar" />
       
       <div class="main-content">
-        <Topbar />
+        <Topbar v-if="showTopbarAndSidebar"  />
         <RouterView />
       </div>
       

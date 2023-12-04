@@ -18,7 +18,7 @@ import plusIcon from '@/components/icons/plus.vue'
     </div>
 
 
-    <button class="primary"><plusIcon /> Add Feedback</button>
+    <router-link to="/new-feedback"><button class="primary"><plusIcon /> Add Feedback</button></router-link>
   </nav>
 </template>
 
@@ -61,6 +61,7 @@ import plusIcon from '@/components/icons/plus.vue'
   font-size: 16px;
   border: none;
 }
+.suggestions-box select:hover{cursor: pointer;}
 .suggestions-box select option{
   color: var(--deep-gray);
 }

@@ -26,7 +26,7 @@
 
       <div class="roadmap-header">
         <h1>Roadmap</h1>
-        <a href="#">View</a>
+        <router-link to="/roadmap">View</router-link>
       </div>
 
       <div class="roadmap-body">
@@ -97,6 +97,10 @@
   padding: 5px 15px;
   margin: 5px;
 }
+.sidebar .tags-card .tags .tag:hover{
+  cursor: pointer;
+  background-color: #CFD7FF;
+}
 .sidebar .tags-card .tags .tag.active{
   background-color: var(--dark-blue);
   color: var(--white);
@@ -120,7 +124,7 @@
   margin-bottom: 20px;
 }
 .sidebar .roadmap-card .roadmap-header a{color: var(--dark-blue);font-weight: 600;}
-.sidebar .roadmap-card .roadmap-header a:hover{text-decoration: underline;}
+.sidebar .roadmap-card .roadmap-header a:hover{text-decoration: underline;color: var(--dark-blue-hvr);}
 .sidebar .roadmap-card .roadmap-body .col{
   display: flex;
   justify-content: space-between;

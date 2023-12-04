@@ -22,11 +22,8 @@ const getAllFeedback = async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-
     let response = await axios.get('../../data.json')
     feedbacks.value = response.data.productRequests
-    // console.log(feedbacks.value[0].upvotes);
-    // console.log(feedbacks.value[0]);
     saveFeedbacks(feedbacks.value)
   }
 }
@@ -47,12 +44,6 @@ const userVoteing = function (feedbackIndex) {
   }
 }
 
-// const updateFeedbackVotes = (feedback) => {
-//   let updatedItem = localStorage.getItem('feedbacks', JSON.parse(feedback));
-//   saveFeedbacks(feedbacks.value[updatedItem])
-//   // console.log(localStorage.getItem('feedbacks', JSON.parse(feedback)));
-// }
-
 const saveFeedbacks = function (feedback) {
   localStorage.setItem('feedbacks',JSON.stringify(feedback))
 }
@@ -71,17 +62,19 @@ const saveFeedbacks = function (feedback) {
           <div class="left-side">
 
             <div class="vote-count-box"  @click="userVoteing(index)">
-              <arrowUpIcon />
+              <arrowUpIcon :isVoted="feedback.isVoted" />
               <span class="votes">{{ feedback.upvotes }}</span>
             </div>
 
-            <div class="feedback-box">
-              <h3 class="feedback-header">{{ feedback.title }}</h3>
-              <p class="feedback-body">{{ feedback.description }}</p>
-              <div class="tags">
-                <span class="tag">{{ feedback.category }}</span>
+            <router-link :to="'/feedback-details/' + feedback.id">
+              <div class="feedback-box">
+                <h3 class="feedback-header">{{ feedback.title }}</h3>
+                <p class="feedback-body">{{ feedback.description }}</p>
+                <div class="tags">
+                  <span class="tag">{{ feedback.category }}</span>
+                </div>
               </div>
-            </div>
+            </router-link>
 
           </div>
 
@@ -92,31 +85,6 @@ const saveFeedbacks = function (feedback) {
           
         </div>
 
-        <!-- <div class="suggestion" :class="{voted: isVoted}">
-
-          <div class="left-side">
-
-            <div class="vote-count-box">
-              <arrowUpIcon class="arrowUp" :style="{'stroke: #fff': isVoted }"/>
-              <span class="votes">66</span>
-            </div>
-
-            <div class="feedback-box">
-              <h3 class="feedback-header">Feedback Header</h3>
-              <p class="feedback-body">Feedback body, We love hearing about new ideas to improve our app.</p>
-              <div class="tags">
-                <span class="tag">UI</span>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="right-side comments">
-            <commentsIcon />
-            <span class="comment-count">4</span>
-          </div>
-          
-        </div> -->
       </div>
 
       <div class="no-feedback" v-else>
@@ -126,7 +94,7 @@ const saveFeedbacks = function (feedback) {
           Got a suggestion? Found a bug that needs to be squashed?<br>
           We love hearing about new ideas to improve our app.
         </p>
-        <button class="primary"><plusIcon /> Add Feedback</button>
+        <router-link to="/new-feedback"><button class="primary"><plusIcon /> Add Feedback</button></router-link>
       </div>
 
     </div>
@@ -154,6 +122,10 @@ const saveFeedbacks = function (feedback) {
   display: flex;
   margin-left: 20px;
   width: 100%;
+}
+.suggestion-holder .suggestion .left-side a{
+  color: unset;
+  text-decoration: unset;
 }
 .suggestion-holder .suggestion .left-side .vote-count-box{
   display: flex;
