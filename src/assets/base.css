@@ -76,8 +76,13 @@ button.go-back:hover{text-decoration: underline;}
 input{
   width: 255px;
   height: 48px;
+  background-color: var(--light-gray);
 }
 input:active{border: 1px solid var(--dark-blue);color: var(--deep-dark-gray);}
+textarea:focus-visible,
+input[type=text]:focus-visible{
+  border-color: var(--dark-blue)!important;
+}
 option{
   width: 255px;
   /* min-height: 240px; */

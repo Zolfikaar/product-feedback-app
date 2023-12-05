@@ -163,7 +163,6 @@ const saveFeedbacks = function (feedback) {
 .suggestion-holder .suggestion .left-side .feedback-box .feedback-body{
   margin: 8px 0 20px 0;
 }
-.suggestion-holder .suggestion .left-side .feedback-box .tags {}
 .suggestion-holder .suggestion .left-side .feedback-box .tags .tag{
   min-width: 48px;
   text-align: center;

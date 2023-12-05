@@ -70,7 +70,7 @@
 }
 
 .sidebar .project-card{
-  background-image: url(../../public/suggestions/desktop/background-header.png);
+  background-image: url(/suggestions/desktop/background-header.png);
   width: 255px;
   height: 137px;
   color: var(--white);
