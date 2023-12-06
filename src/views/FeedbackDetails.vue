@@ -33,6 +33,7 @@
       comments = feedback.value[0].comments
       // console.log(feedback.value[0].comments[1].replies);
   })
+  
 
   const getFeedback = async () => {
     let data = JSON.parse(localStorage.getItem('feedbacks'))
@@ -58,6 +59,7 @@
 
   const replyOn = (userToReplyOn) => {
     showReplyBox = true
+    console.log(userToReplyOn);
   }
 </script>
 
@@ -137,19 +139,21 @@
             </div>
 
             <div class="comment-body">
-
+ 
               <p>{{ comment.content }}</p>
 
-              <div class="post-reply" v-show="showReplyBox">
-                <input type="text" class="post-reply-input" placeholder="Type your comment here">
-                <button class="primary">Post Reply</button>
-              </div>
+              
+                <div class="post-reply" v-if="showReplyBox">
+                  <input type="text" class="post-reply-input" placeholder="Type your comment here">
+                  <button class="primary">Post Reply</button>
+                </div>
+
 
               <!-- Comment reply -->
               
               <div class="comment-replies" v-if="comment.replies">
 
-                <!-- <div class="line"></div> -->
+                <div class="line"></div>
 
                 <div class="comment-reply">
 
@@ -178,7 +182,7 @@
 
                       <p><span class="replying-to">@{{ reply.replyingTo }} </span>{{ reply.content }}</p>
 
-                      <div class="comment-reply" v-show="showReplyBox">
+                      <div class="comment-reply" v-if="showReplyBox">
                         <input type="text" class="comment-reply-input" placeholder="Type your comment here">
                         <button class="primary">Post Reply</button>
                       </div>

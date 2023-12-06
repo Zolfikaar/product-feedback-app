@@ -147,7 +147,6 @@ const saveFeedbacks = function (feedback) {
 }
 .suggestion-holder .suggestion.voted .left-side .vote-count-box{
   background-color: var(--dark-blue) ;
-
 }
 .suggestion-holder .suggestion .left-side .vote-count-box .votes{
   margin-top: 8px;
