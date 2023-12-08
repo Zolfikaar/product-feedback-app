@@ -3,6 +3,64 @@ import leftArrowIcon from '@/components/icons/arrowLeft.vue'
 import plusIcon from '@/components/icons/plus.vue'
 import arrowUpIcon from '@/components/icons/arrowUp.vue'
 import commentsIcon from '@/components/icons/comments.vue'
+import emptyIcon from '@/components/icons/empty.vue'
+
+import axios from "axios";
+
+import { onMounted, ref } from 'vue';
+
+
+
+const feedbacks = ref({})
+const planned = ref({})
+const inProgress = ref({})
+const live = ref({})
+const isVoted = ref(false);
+
+onMounted(async () => {
+  if (localStorage.getItem('feedbacks')) {
+    let data = (feedbacks.value = JSON.parse(localStorage.getItem('feedbacks')));
+    plannedData(data);
+    inProgressData(data);
+    Live(data);
+  } else {
+    let response = await axios.get('../../data.json');
+    feedbacks.value = response.data.productRequests;
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
+  }
+});
+
+const plannedData = (data) => {
+  planned.value = data.filter((ele) => ele.status === 'planned');
+};
+
+const inProgressData = (data) => {
+  inProgress.value = data.filter((ele) => ele.status === 'in-progress');
+};
+
+const Live = (data) => {
+  live.value = data.filter((ele) => ele.status === 'live');
+};
+
+const userVoting = (item) => {
+  
+  // Retrieve existing data from local storage
+  const storedData = JSON.parse(localStorage.getItem('feedbacks')) || [];
+
+  // Find the index of the item in the stored data
+  const index = storedData.findIndex((storedItem) => storedItem.id === item.id);
+
+  if (index !== -1 && !storedData[index].isVoted) {
+    // Update the local data
+    storedData[index].isVoted = true;
+    storedData[index].upvotes++;
+
+    // Save the modified data back to local storage
+    localStorage.setItem('feedbacks', JSON.stringify(storedData));
+    
+  }
+};
+
 </script>
 
 <template>
@@ -20,78 +78,45 @@ import commentsIcon from '@/components/icons/comments.vue'
 
     <div class="roadmap-content">
 
-      <div class="roadmap-lists">
+      <div class="roadmap-lists" v-if="feedbacks">
 
         <div class="list">
 
           <div class="list-header">
-            <h3>Planned <span>(2)</span></h3>
+            <h3>Planned <span>({{ planned.length }})</span></h3>
             <p>Ideas prioritized for research</p>
           </div>
 
           <div class="list-items">
 
-            <div class="item voted">
+            <div class="item" :class="{voted: item.isVoted}"  v-for="item in planned">
 
               <div class="item-header">
                 <span></span>
-                <p>Planned</p>
+                <p>{{ item.status }}</p>
               </div>
 
               <div class="item-body">
-                <a>
+                <router-link :to="'/feedback-details/' + item.id">
                   <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
+                    <h3 class="feedback-header">{{ item.title }}</h3>
+                    <p class="feedback-body">{{ item.description }}</p>
                     <div class="tags">
-                      <span class="tag">Feature</span>
+                      <span class="tag">{{ item.category }}</span>
                     </div>
                   </div>
-                </a>
+                </router-link>
               </div>
 
               <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
+                <div class="vote-count-box" @click="userVoting(item)">
+                  <arrowUpIcon :isVoted="item.isVoted" />
+                  <span class="votes">{{ item.upvotes }}</span>
                 </div>
 
                 <div class="comments-count">
                   <commentsIcon />
-                  <span class="comment-count">2</span>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="item">
-
-              <div class="item-header">
-                <span></span>
-                <p>Planned</p>
-              </div>
-
-              <div class="item-body">
-                <a>
-                  <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
-                    <div class="tags">
-                      <span class="tag">Feature</span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
-                </div>
-
-                <div class="comments-count">
-                  <commentsIcon />
-                  <span class="comment-count">2</span>
+                  <span class="comment-count">{{ item.comments ? item.comments.length : 0 }}</span>
                 </div>
               </div>
 
@@ -104,75 +129,42 @@ import commentsIcon from '@/components/icons/comments.vue'
         <div class="list">
 
           <div class="list-header">
-            <h3>Planned <span>(2)</span></h3>
+            <h3>In-progress <span>({{ inProgress.length }})</span></h3>
             <p>Ideas prioritized for research</p>
           </div>
 
           <div class="list-items">
 
-            <div class="item voted">
+            <div class="item" :class="{voted: item.isVoted}"  v-for="item in inProgress">
 
-              <div class="item-header">
-                <span></span>
-                <p>Planned</p>
-              </div>
-
-              <div class="item-body">
-                <a>
-                  <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
-                    <div class="tags">
-                      <span class="tag">Feature</span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
-                </div>
-
-                <div class="comments-count">
-                  <commentsIcon />
-                  <span class="comment-count">2</span>
-                </div>
-              </div>
-
+            <div class="item-header">
+              <span></span>
+              <p>{{ item.status }}</p>
             </div>
 
-            <div class="item">
-
-              <div class="item-header">
-                <span></span>
-                <p>Planned</p>
-              </div>
-
-              <div class="item-body">
-                <a>
-                  <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
-                    <div class="tags">
-                      <span class="tag">Feature</span>
-                    </div>
+            <div class="item-body">
+              <router-link :to="'/feedback-details/' + item.id">
+                <div class="feedback-box">
+                  <h3 class="feedback-header">{{ item.title }}</h3>
+                  <p class="feedback-body">{{ item.description }}</p>
+                  <div class="tags">
+                    <span class="tag">{{ item.category }}</span>
                   </div>
-                </a>
+                </div>
+              </router-link>
+            </div>
+
+            <div class="item-footer">
+              <div class="vote-count-box" @click="userVoting(item)">
+                <arrowUpIcon :isVoted="item.isVoted" />
+                <span class="votes">{{ item.upvotes }}</span>
               </div>
 
-              <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
-                </div>
-
-                <div class="comments-count">
-                  <commentsIcon />
-                  <span class="comment-count">2</span>
-                </div>
+              <div class="comments-count">
+                <commentsIcon />
+                <span class="comment-count">{{ item.comments ? item.comments.length : 0 }}</span>
               </div>
+            </div>
 
             </div>
 
@@ -183,75 +175,42 @@ import commentsIcon from '@/components/icons/comments.vue'
         <div class="list">
 
           <div class="list-header">
-            <h3>Planned <span>(2)</span></h3>
+            <h3>Live <span>({{ live.length }})</span></h3>
             <p>Ideas prioritized for research</p>
           </div>
 
           <div class="list-items">
 
-            <div class="item voted">
+            <div class="item" :class="{voted: item.isVoted}" v-for="item in live">
 
-              <div class="item-header">
-                <span></span>
-                <p>Planned</p>
-              </div>
-
-              <div class="item-body">
-                <a>
-                  <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
-                    <div class="tags">
-                      <span class="tag">Feature</span>
-                    </div>
-                  </div>
-                </a>
-              </div>
-
-              <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
-                </div>
-
-                <div class="comments-count">
-                  <commentsIcon />
-                  <span class="comment-count">2</span>
-                </div>
-              </div>
-
+            <div class="item-header">
+              <span></span>
+              <p>{{ item.status }}</p>
             </div>
 
-            <div class="item">
-
-              <div class="item-header">
-                <span></span>
-                <p>Planned</p>
-              </div>
-
-              <div class="item-body">
-                <a>
-                  <div class="feedback-box">
-                    <h3 class="feedback-header">More comprehensive reports</h3>
-                    <p class="feedback-body">It would be great to see a more detailed breakdown of solutions.</p>
-                    <div class="tags">
-                      <span class="tag">Feature</span>
-                    </div>
+            <div class="item-body">
+              <router-link :to="'/feedback-details/' + item.id">
+                <div class="feedback-box">
+                  <h3 class="feedback-header">{{ item.title }}</h3>
+                  <p class="feedback-body">{{ item.description }}</p>
+                  <div class="tags">
+                    <span class="tag">{{ item.category }}</span>
                   </div>
-                </a>
+                </div>
+              </router-link>
+            </div>
+
+            <div class="item-footer">
+              <div class="vote-count-box" @click="userVoting(item)">
+                <arrowUpIcon :isVoted="item.isVoted" />
+                <span class="votes">{{ item.upvotes }}</span>
               </div>
 
-              <div class="item-footer">
-                <div class="vote-count-box" >
-                  <arrowUpIcon  />
-                  <span class="votes">123</span>
-                </div>
-
-                <div class="comments-count">
-                  <commentsIcon />
-                  <span class="comment-count">2</span>
-                </div>
+              <div class="comments-count">
+                <commentsIcon />
+                <span class="comment-count">{{ item.comments ? item.comments.length : 0 }}</span>
               </div>
+            </div>
 
             </div>
 
@@ -260,6 +219,16 @@ import commentsIcon from '@/components/icons/comments.vue'
         </div>
 
       </div>
+
+      <div class="no-feedback" v-else>
+          <emptyIcon />
+          <h1>There is no feedback yet.</h1>
+          <p>
+            Got a suggestion? Found a bug that needs to be squashed?<br>
+            We love hearing about new ideas to improve our app.
+          </p>
+          <router-link to="/new-feedback"><button class="primary"><plusIcon /> Add Feedback</button></router-link>
+        </div>
 
     </div>
 
@@ -296,7 +265,7 @@ import commentsIcon from '@/components/icons/comments.vue'
 }
 .roadmap-content .roadmap-lists .list .list-header{margin-bottom: 20px;}
 .roadmap-content .roadmap-lists .list .list-header p{color: var(--deep-gray);}
-.roadmap-content .roadmap-lists .list .list-items { }
+.roadmap-content .roadmap-lists .list .list-items {}
 .roadmap-content .roadmap-lists .list .list-items .item{
   margin-bottom: 20px;
   background-color: var(--white);
@@ -334,6 +303,7 @@ import commentsIcon from '@/components/icons/comments.vue'
   align-items: center;
   min-height: 150px;
   margin-bottom: 20px;
+  text-decoration: unset;
 }
 .roadmap-content .roadmap-lists .list .list-items .item .item-body a:hover{
   cursor: pointer;
@@ -344,7 +314,13 @@ import commentsIcon from '@/components/icons/comments.vue'
 /* =========================================== */
 /* =========================================== */
 .roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box{}
-.roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box .feedback-header{}
+.roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box .feedback-header{
+  color: var(--deep-dark-gray);
+}
+.roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box:hover .feedback-header{
+  
+  color: var(--dark-blue);
+}
 .roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box .feedback-body{margin: 15px 0; color: var(--deep-gray);}
 .roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box .tags{}
 .roadmap-content .roadmap-lists .list .list-items .item .item-body a .feedback-box .tags .tag{

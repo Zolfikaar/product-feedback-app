@@ -185,17 +185,5 @@ const saveFeedbacks = function (feedback) {
   margin-left: 15px;
   font-weight: bold;
 }
-.no-feedback{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 560px;
-}
-.no-feedback h1{
-  margin: 20px 0;
-}
-.no-feedback p{
-  margin-bottom: 50px;
-}
+
 </style>
