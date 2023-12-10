@@ -20,6 +20,8 @@ let isEmptyCategory = ref(false)
 let submitedDescription = ''
 let isEmptyDescription = ref(false)
 
+let notEmptyInputs = ref(false)
+
 const categorySelectedRef = ref(null);
 
 onMounted( async () => {
@@ -30,7 +32,7 @@ const toggleDropdown = () => showDropdown.value = !showDropdown.value
 
 const selectCategory = (index) => {
   selectedCategoryIndex.value = index
-  showDropdown.value = false // not working
+  showDropdown.value = false // need to make it work as if user clicked outside the element, dropdown should disappears
   submitedCategory.value = categoriesArr[index]
 }
 
@@ -60,7 +62,7 @@ const loadCtegories = async () => {
   }
 }
 
-const onSubmit = () => {
+const checkSubmitedInputs = () => {
   if(submitedTitle === '' ){
     isEmptyTitle.value = true
   } else {
@@ -76,6 +78,43 @@ const onSubmit = () => {
   } else {
     isEmptyDescription.value = false
   }
+
+  if(!isEmptyTitle.value && !isEmptyCategory.value && !isEmptyDescription.value){
+    return notEmptyInputs.value = true
+  }
+}
+
+const resetForm = () => {
+  // Clear the form fields
+  submitedTitle = '';
+  submitedCategory.value = '';
+  submitedDescription = '';
+}
+
+const onSubmit = () => {
+  checkSubmitedInputs()
+  if(notEmptyInputs.value){
+   let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
+
+   // Create a new feedback object
+   let newFeedback = {
+      id: feedbacks.length + 1, // Increment the ID based on the array length
+      title: submitedTitle,
+      category: submitedCategory.value,
+      description: submitedDescription,
+      status: 'suggestion',
+      upvotes: 0
+    };
+
+    // Push the new feedback into the array
+    feedbacks.push(newFeedback);
+
+    // Save the updated feedbacks array back to local storage
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+  }
+
+  resetForm()
   
 }
 </script>
@@ -135,8 +174,8 @@ const onSubmit = () => {
         </div>
 
         <div class="btns">
-          <button class="deep-dark-gray">Cancel</button>
-          <button class="primary" type="submit">Add Feedback</button>
+          <button class="deep-dark-gray" @click="resetForm">Cancel</button>
+          <button class="primary" type="submit"><plusIcon /> Add Feedback</button>
         </div>
 
       </form>
