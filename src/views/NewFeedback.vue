@@ -1,11 +1,14 @@
 <script setup>
 import { onMounted ,ref } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import leftArrowIcon from '@/components/icons/arrowLeft.vue'
 import plusIcon from '@/components/icons/plus.vue'
 import upArrowIcon from '@/components/icons/arrowUp.vue'
 import checkIcon from '@/components/icons/check.vue'
 import newFeedbackIcon from '@/components/icons/newFeedback.vue'
+
+const router = useRouter()
 
 let showDropdown = ref(false)
 let selectedCategoryIndex = ref(null);
@@ -30,10 +33,11 @@ onMounted( async () => {
 
 const toggleDropdown = () => showDropdown.value = !showDropdown.value
 
-const selectCategory = (index) => {
-  selectedCategoryIndex.value = index
-  showDropdown.value = false // need to make it work as if user clicked outside the element, dropdown should disappears
+const selectCategory = (index, event) => {
+  event.stopPropagation(); // Stop event propagation
   submitedCategory.value = categoriesArr[index]
+  toggleDropdown()
+  selectedCategoryIndex.value = categoriesArr.indexOf(submitedCategory.value)
 }
 
 const loadCtegories = async () => {
@@ -112,6 +116,9 @@ const onSubmit = () => {
     // Save the updated feedbacks array back to local storage
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
 
+    // redirecting to home page
+    router.push({ name: 'home'})
+
   }
 
   resetForm()
@@ -157,7 +164,12 @@ const onSubmit = () => {
             
             <div class="category-dropdown" v-show="showDropdown">
 
-              <span class="category" :class="{ selected: selectedCategoryIndex === index }" v-for="(category,index) in categoriesArr" @click="selectCategory(index)" :key="index">
+              <span 
+                class="category" 
+                :class="{ selected: selectedCategoryIndex === index }" 
+                v-for="(category,index) in categoriesArr" 
+                :key="index"
+                @click="($event) => selectCategory(index, $event)">
                 {{ category }}
                 <checkIcon v-if="selectedCategoryIndex === index" />
               </span>

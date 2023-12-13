@@ -150,8 +150,8 @@ const deleteFeedback = () => {
   // saveing the updated feedbacks into local storage
   localStorage.setItem('feedbacks', JSON.stringify(feedbacks))
 
+  // redirecting to home page
   router.push({ name: 'home'})
-
   
 } 
 
