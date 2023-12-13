@@ -1,18 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import axios from "axios";
 import emptyIcon from '@/components/icons/empty.vue'
 import plusIcon from '@/components/icons/plus.vue' 
 import arrowUpIcon from '@/components/icons/arrowUp.vue'
 import commentsIcon from '@/components/icons/comments.vue'
 
-
-const router = useRouter()
-
 let feedbacks = ref([])
-
-const isVoted = ref(false)
 
 onMounted( async () => {
   getAllFeedback()
@@ -44,9 +38,7 @@ const userVoteing = function (feedbackIndex) {
   }
 }
 
-const saveFeedbacks = function (feedback) {
-  localStorage.setItem('feedbacks',JSON.stringify(feedback))
-}
+const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON.stringify(feedback))}
 </script>
 
 <template>

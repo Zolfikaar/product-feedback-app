@@ -174,7 +174,7 @@ const onSubmit = () => {
         </div>
 
         <div class="btns">
-          <button class="deep-dark-gray" @click="resetForm">Cancel</button>
+          <button class="deep-dark-gray" @click.self="resetForm">Cancel</button>
           <button class="primary" type="submit"><plusIcon /> Add Feedback</button>
         </div>
 
@@ -242,11 +242,7 @@ const onSubmit = () => {
 }
 .new-feedback-content form .form-group.category-group .select-box .category-dropdown .category:not(:last-child){border-bottom: 1px solid rgba(0,0,0,.15);}
 .new-feedback-content form .form-group.category-group .select-box .category-dropdown .category:hover,
-.new-feedback-content form .form-group.category-group .select-box .category-dropdown .category.selected{
-  color: var(--primary);
-}
-
-
+.new-feedback-content form .form-group.category-group .select-box .category-dropdown .category.selected{color: var(--primary);}
 .new-feedback-content form .form-group label{
   font-weight: bold;
   color: var(--deep-dark-gray);
@@ -273,23 +269,12 @@ const onSubmit = () => {
   border-radius: 10px;
 }
 .new-feedback-content form .form-group textarea:focus,
-.new-feedback-content form .form-group input:focus{
-  outline-color: var(--primary);
-}
-
-
-
-
-
+.new-feedback-content form .form-group input:focus{outline-color: var(--primary);}
 .new-feedback-content form .form-group.category-group .select-box.error{border: 2px solid var(--red);}
 .new-feedback-content form .form-group textarea.error,
 .new-feedback-content form .form-group input.error{border:2px solid var(--red);}
 .new-feedback-content form .form-group textarea.error:focus,
 .new-feedback-content form .form-group input.error:focus{outline-color: var(--red);}
-
-
-
-
 .new-feedback-content form .btns{
   display: flex;
   justify-content: flex-end;

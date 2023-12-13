@@ -9,8 +9,6 @@ import axios from "axios";
 
 import { onMounted, ref } from 'vue';
 
-
-
 const feedbacks = ref({})
 const planned = ref({})
 const inProgress = ref({})

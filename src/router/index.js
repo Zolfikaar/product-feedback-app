@@ -21,10 +21,11 @@ const router = createRouter({
       meta: { showTopbarAndSidebar: false },
     },
     {
-      path: "/edit-feedback",
+      path: "/edit-feedback/:id",
       name: "editFeedback",
       component: EditFeedback,
       meta: { showTopbarAndSidebar: false },
+      props: true,
     },
     {
       path: "/feedback-details/:id",
@@ -38,7 +39,6 @@ const router = createRouter({
       name: "roadmap",
       component: Roadmap,
       meta: { showTopbarAndSidebar: false },
-      // props: true,
     },
   ],
 });

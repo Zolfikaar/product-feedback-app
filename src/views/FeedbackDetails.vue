@@ -7,6 +7,7 @@
   const feedback = ref({})
   const feedbacks = ref({})
 
+  let id = ref()
   let title = ref({})
   let isVoted = false
   let upvotes = 0
@@ -25,13 +26,13 @@
 
   onMounted(async () => {
       getFeedback()
+      id.value = feedback.value[0].id
       title.value = feedback.value[0].title
       isVoted = feedback.value[0].isVoted
       upvotes = feedback.value[0].upvotes
       description = feedback.value[0].description
       category = feedback.value[0].category
       comments = feedback.value[0].comments
-      // console.log(feedback.value[0].comments[1].replies);
   })
   
 
@@ -71,7 +72,7 @@
         <router-link to="/"><button class="go-back">Go Back</button></router-link>
       </div>
 
-      <router-link to="/edit-feedback"><button class="dark-blue">Edit Feedback</button></router-link>
+      <router-link :to="`/edit-feedback/${id}`"><button class="dark-blue">Edit Feedback</button></router-link>
     </nav>
 
 
