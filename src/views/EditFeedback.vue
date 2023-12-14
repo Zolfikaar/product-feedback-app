@@ -46,11 +46,14 @@ onMounted( async () => {
   submitedCategory.value = currentFeedback.value.category;
   selectedCategoryIndex.value = categoriesArr.indexOf(submitedCategory.value)
 
-  
+  console.log('old values');
+  console.log(currentFeedback.value.title);
+  console.log(currentFeedback.value.category);
+  console.log(currentFeedback.value.description);
   // test purpose
-  currentFeedback.title = submitedTitle.value
-  currentFeedback.category = submitedCategory.value
-  currentFeedback.description = submitedDescription.value
+  // currentFeedback.title = submitedTitle.value
+  // currentFeedback.category = submitedCategory.value
+  // currentFeedback.description = submitedDescription.value
   
   // console.log(data.filter((item) => item.id == props.id));
 })
@@ -126,12 +129,24 @@ const onSubmit = () => {
 
    let currentFeedback = feedbacks.filter((item) => item.id == props.id)
 
-   currentFeedback.title = submitedTitle.value
-   currentFeedback.category = submitedCategory.value
-   currentFeedback.description = submitedDescription.value
+   // delete the current feedback with old data
+   let index = feedbacks.indexOf(currentFeedback[0])
 
-    // Push the new feedback into the array
-    feedbacks.push(currentFeedback);
+   if(index > -1) { // only splice array when item is found
+    feedbacks.splice(index, 1) // 2nd parameter means remove one item only
+  }
+
+   let updatedFeedback = {
+    id: props.id,
+    title: submitedTitle.value,
+    category: submitedCategory.value,
+    description: submitedDescription.value,
+    status: 'suggestion',
+    upvotes: 0
+   }
+
+    // Push the new feedback into the array with the new data
+    feedbacks.push(updatedFeedback);
 
     // Save the updated feedbacks array back to local storage
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
