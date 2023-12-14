@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import leftArrowIcon from '@/components/icons/arrowLeft.vue'
@@ -14,13 +14,13 @@ let showDropdown = ref(false)
 let selectedCategoryIndex = ref(null);
 let categoriesArr = []
 
-let submitedTitle = ''
+let submitedTitle = ref('')
 let isEmptyTitle = ref(false)
 
-let submitedCategory = ref()
+let submitedCategory = ref('')
 let isEmptyCategory = ref(false)
 
-let submitedDescription = ''
+let submitedDescription = ref('')
 let isEmptyDescription = ref(false)
 
 let notEmptyInputs = ref(false)
@@ -36,19 +36,32 @@ const props = defineProps({
 const currentFeedback = ref()
 
 onMounted( async () => {
-  loadCtegories()
+  await loadCtegories()
 
   let data = JSON.parse(localStorage.getItem('feedbacks'))
-  currentFeedback.value = data.filter((item) => item.id == props.id)
-  submitedTitle = currentFeedback.value[0].title
+
+  currentFeedback.value = data.find((item) => item.id == props.id);
+  submitedTitle.value = currentFeedback.value.title;
+  submitedDescription.value = currentFeedback.value.description
+  submitedCategory.value = currentFeedback.value.category;
+  selectedCategoryIndex.value = categoriesArr.indexOf(submitedCategory.value)
+
+  
+  // test purpose
+  currentFeedback.title = submitedTitle.value
+  currentFeedback.category = submitedCategory.value
+  currentFeedback.description = submitedDescription.value
+  
+  // console.log(data.filter((item) => item.id == props.id));
 })
 
 const toggleDropdown = () => showDropdown.value = !showDropdown.value
 
-const selectCategory = (index) => {
-  selectedCategoryIndex.value = index
-  showDropdown.value = false // need to make it work as if user clicked outside the element, dropdown should disappears
+const selectCategory = (index, event) => {
+  event.stopPropagation(); // Stop event propagation
   submitedCategory.value = categoriesArr[index]
+  toggleDropdown()
+  selectedCategoryIndex.value = categoriesArr.indexOf(submitedCategory.value)
 }
 
 const loadCtegories = async () => {
@@ -78,20 +91,20 @@ const loadCtegories = async () => {
 }
 
 const checkSubmitedInputs = () => {
-  if(submitedTitle === '' ){
-    isEmptyTitle.value = true
+  if (submitedTitle.value === '') {
+    isEmptyTitle.value = true;
   } else {
-    isEmptyTitle.value = false
+    isEmptyTitle.value = false;
   }
-  if (submitedCategory.value === undefined){
-    isEmptyCategory.value = true
+  if (submitedCategory.value === '') {
+    isEmptyCategory.value = true;
   } else {
-    isEmptyCategory.value = false
+    isEmptyCategory.value = false;
   }
-  if (submitedDescription === ''){
-    isEmptyDescription.value = true
+  if (submitedDescription.value === '') {
+    isEmptyDescription.value = true;
   } else {
-    isEmptyDescription.value = false
+    isEmptyDescription.value = false;
   }
 
   if(!isEmptyTitle.value && !isEmptyCategory.value && !isEmptyDescription.value){
@@ -111,18 +124,14 @@ const onSubmit = () => {
   if(notEmptyInputs.value){
    let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
 
-   // Create a new feedback object
-   let newFeedback = {
-      id: feedbacks.length + 1, // Increment the ID based on the array length
-      title: submitedTitle,
-      category: submitedCategory.value,
-      description: submitedDescription,
-      status: 'suggestion',
-      upvotes: 0
-    };
+   let currentFeedback = feedbacks.filter((item) => item.id == props.id)
+
+   currentFeedback.title = submitedTitle.value
+   currentFeedback.category = submitedCategory.value
+   currentFeedback.description = submitedDescription.value
 
     // Push the new feedback into the array
-    feedbacks.push(newFeedback);
+    feedbacks.push(currentFeedback);
 
     // Save the updated feedbacks array back to local storage
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
@@ -130,6 +139,9 @@ const onSubmit = () => {
   }
 
   resetForm()
+
+  // redirecting to home page
+  router.push({ name: 'home'})
   
 }
 
@@ -187,15 +199,22 @@ const deleteFeedback = () => {
           <p>Choose a category for your feedback</p>
 
           <div class="select-box" @click="toggleDropdown" :class="[{active:showDropdown},{error: isEmptyCategory}]">
-            <div class="category-selected-value" ref="categorySelectedRef">
-              {{ selectedCategoryIndex !== null ? categoriesArr[selectedCategoryIndex] : 'Select a category' }}
+            <!-- <div class="category-selected-value" ref="categorySelectedRef"> -->
+            <div class="category-selected-value" >
+              <!-- {{ selectedCategoryIndex !== null ? categoriesArr[selectedCategoryIndex] : 'Select a category' }}  -->
+              {{ selectedCategoryIndex !== null ? submitedCategory : 'Select a category' }}
             </div>
 
             <upArrowIcon class="arrow-icon" :style="showDropdown ? 'transform: rotate(0deg)' : 'transform: rotate(180deg)'"/>
             
             <div class="category-dropdown" v-show="showDropdown">
 
-              <span class="category" :class="{ selected: selectedCategoryIndex === index }" v-for="(category,index) in categoriesArr" @click="selectCategory(index)" :key="index">
+              <span 
+                class="category" 
+                :class="{ selected: selectedCategoryIndex === index }" 
+                v-for="(category,index) in categoriesArr" 
+                :key="index"
+                @click="($event) => selectCategory(index, $event)">
                 {{ category }}
                 <checkIcon v-if="selectedCategoryIndex === index" />
               </span>
@@ -217,7 +236,7 @@ const deleteFeedback = () => {
           </div>
           <div>
             <button class="deep-dark-gray" @click.self="resetForm">Cancel</button>
-            <button class="primary" type="submit"><plusIcon /> Add Feedback</button>
+            <button class="primary" type="submit"><plusIcon /> Update Feedback</button>
           </div>
         </div>
 
