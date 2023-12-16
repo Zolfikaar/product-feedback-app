@@ -1,4 +1,59 @@
 <script setup>
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
+
+// const $emit = defineEmits(['onCategorySelected'])
+
+let categories = []
+let categoriesArr = []
+let plannedCount = ref({})
+let inProgressCount = ref({})
+let liveCount = ref({})
+let allSelected = ref('all')
+let categorySelected = ref({})
+
+onMounted( async () => {
+  getData()
+  plannedData(categories);
+  inProgressData(categories);
+  LiveData(categories);
+})
+
+const getData = async () => {
+  if(localStorage.getItem('feedbacks')){
+    categories = JSON.parse(localStorage.getItem('feedbacks'))
+  } else {
+    let response = await axios.get('../../data.json')
+    categories = response.data.productRequests
+  }
+
+  categories.forEach(ele => {
+    let category = ele.category
+    if(!categoriesArr.includes(category)){
+      categoriesArr.push(category)
+    }
+  })
+}
+
+const plannedData = data => plannedCount.value = data.filter((ele) => ele.status === 'planned')
+
+const inProgressData = data => inProgressCount.value = data.filter((ele) => ele.status === 'in-progress')
+
+const LiveData = data => liveCount.value = data.filter((ele) => ele.status === 'live')
+
+const selectCategory = (category) => {
+
+  if (category == 'all') {
+    allSelected.value = category
+    categorySelected.value = ref()
+  } else {
+    categorySelected.value = category
+    allSelected.value = ref()
+    // $emit('onCategorySelected', category)
+  }
+  
+};
+
 
 </script>
 
@@ -14,12 +69,14 @@
     </div>
     <div class="tags-card">
       <div class="tags">
-        <span class="tag active">All</span>
-        <span class="tag">UI</span>
-        <span class="tag">UX</span>
-        <span class="tag">Enhancement</span>
-        <span class="tag">Bug</span>
-        <span class="tag">Feature</span>
+        <span class="tag" :class="{active: allSelected == 'all'}" @click="selectCategory('all')">All</span>
+
+        <template v-for="category in categoriesArr" :key="category" >
+          
+          <span class="tag" @click="selectCategory(category)" :class="{active: categorySelected == category}" @onCategorySelected="category">
+            {{ category }}
+          </span>
+        </template>
       </div>
     </div>
     <div class="roadmap-card">
@@ -36,7 +93,7 @@
             <p>Planned</p>
           </div>
           <div>
-            <p>2</p>
+            <p>{{ plannedCount.length }}</p>
           </div>
         </div>
         <div class="col">
@@ -45,7 +102,7 @@
             <p>In-Progress</p>
           </div>
           <div>
-            <p>3</p>
+            <p>{{ inProgressCount.length }}</p>
           </div>
         </div>
         <div class="col">
@@ -54,7 +111,7 @@
             <p>Live</p>
           </div>
           <div>
-            <p>1</p>
+            <p>{{ liveCount.length }}</p>
           </div>
         </div>
       </div>

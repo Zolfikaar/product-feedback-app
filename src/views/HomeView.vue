@@ -6,15 +6,25 @@ import plusIcon from '@/components/icons/plus.vue'
 import arrowUpIcon from '@/components/icons/arrowUp.vue'
 import commentsIcon from '@/components/icons/comments.vue'
 
+let props = defineProps({
+  onCategorySelected: {
+    type: String,
+    default: 'all'
+  }
+})
+
 let feedbacks = ref([])
 
 onMounted( async () => {
   getAllFeedback()
+
+  
 })
 
 const getAllFeedback = async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
+    console.log(props.onCategorySelected);
   } else {
     let response = await axios.get('../../data.json')
     feedbacks.value = response.data.productRequests
@@ -42,6 +52,11 @@ const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON
 </script>
 
 <template>
+
+  <div class="notifications-box">
+    <p>notification message goes here</p>
+    <span>X</span>
+  </div>
   
   <div class="home-content">
 
@@ -94,6 +109,19 @@ const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON
 </template>
 
 <style scoped>
+.notifications-box{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 80px;
+  min-width: 350px;
+  height: 50px;
+  padding: 0 15px;
+  background-color: var(--dark-blue);
+  opacity: .7;
+}
 .content-box{
   margin-top: 20px;
 }

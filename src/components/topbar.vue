@@ -1,13 +1,30 @@
 <script setup>
 import iconSuggestions from '@/components/icons/suggestions.vue'
 import plusIcon from '@/components/icons/plus.vue'
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
+
+let feedbacks = ref([])
+let suggestionsCount = ref([])
+
+onMounted( async () => {
+  if(localStorage.getItem('feedbacks')){
+    feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
+  } else {
+    let response = await axios.get('../../data.json')
+    feedbacks.value = response.data.productRequests
+  }
+
+  suggestionsCount.value = feedbacks.value.filter(ele => ele.status == 'suggestion').length
+})
+
 </script>
 
 <template>
   <nav class="topbar">
     <div class="suggestions-box">
       <iconSuggestions />
-      <h1 class="suggest-count"><span>6</span> Suggestions</h1>
+      <h1 class="suggest-count"><span v-text="suggestionsCount >= 0 ? suggestionsCount : 0"></span> Suggestions</h1>
       <span class="sort-by">Sort by: </span>
       <select value="">
           <option name="" id="" value="1" selected>Most upvotes</option>

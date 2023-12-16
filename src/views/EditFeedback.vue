@@ -46,16 +46,6 @@ onMounted( async () => {
   submitedCategory.value = currentFeedback.value.category;
   selectedCategoryIndex.value = categoriesArr.indexOf(submitedCategory.value)
 
-  console.log('old values');
-  console.log(currentFeedback.value.title);
-  console.log(currentFeedback.value.category);
-  console.log(currentFeedback.value.description);
-  // test purpose
-  // currentFeedback.title = submitedTitle.value
-  // currentFeedback.category = submitedCategory.value
-  // currentFeedback.description = submitedDescription.value
-  
-  // console.log(data.filter((item) => item.id == props.id));
 })
 
 const toggleDropdown = () => showDropdown.value = !showDropdown.value
@@ -137,7 +127,7 @@ const onSubmit = () => {
   }
 
    let updatedFeedback = {
-    id: props.id,
+    id: Number(props.id),
     title: submitedTitle.value,
     category: submitedCategory.value,
     description: submitedDescription.value,
