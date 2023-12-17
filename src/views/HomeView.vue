@@ -1,30 +1,22 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref,defineProps,computed } from 'vue'
 import axios from "axios";
 import emptyIcon from '@/components/icons/empty.vue'
 import plusIcon from '@/components/icons/plus.vue' 
 import arrowUpIcon from '@/components/icons/arrowUp.vue'
 import commentsIcon from '@/components/icons/comments.vue'
 
-let props = defineProps({
-  onCategorySelected: {
-    type: String,
-    default: 'all'
-  }
-})
-
 let feedbacks = ref([])
+
+const props = defineProps(['categoryFilter']);
 
 onMounted( async () => {
   getAllFeedback()
-
-  
 })
 
 const getAllFeedback = async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
-    console.log(props.onCategorySelected);
   } else {
     let response = await axios.get('../../data.json')
     feedbacks.value = response.data.productRequests
@@ -49,6 +41,11 @@ const userVoteing = function (feedbackIndex) {
 }
 
 const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON.stringify(feedback))}
+
+const filteredFeedbacks = computed(() => {
+  return props.categoryFilter === 'all' ? feedbacks.value : feedbacks.value.filter(feedback => feedback.category === props.categoryFilter);
+});
+
 </script>
 
 <template>
@@ -62,9 +59,9 @@ const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON
 
     <div class="content-box">
       
-      <div class="suggestion-holder" v-if="feedbacks" >
+      <div class="suggestion-holder" v-if="filteredFeedbacks" >
 
-        <div class="suggestion" :class="{voted: feedback.isVoted}" v-for="(feedback, index) in feedbacks" :key="index">
+        <div class="suggestion" :class="{voted: feedback.isVoted}" v-for="(feedback, index) in filteredFeedbacks" :key="index">
 
           <div class="left-side">
 

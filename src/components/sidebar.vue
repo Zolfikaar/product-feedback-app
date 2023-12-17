@@ -1,8 +1,8 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { defineEmits,onMounted, ref } from 'vue'
 import axios from 'axios'
 
-// const $emit = defineEmits(['onCategorySelected'])
+const emit = defineEmits(['onCategorySelected'])
 
 let categories = []
 let categoriesArr = []
@@ -43,17 +43,18 @@ const LiveData = data => liveCount.value = data.filter((ele) => ele.status === '
 
 const selectCategory = (category) => {
 
-  if (category == 'all') {
+  if (category === 'all') {
     allSelected.value = category
-    categorySelected.value = ref()
+    categorySelected.value = null
+    emit('onCategorySelected', category)
   } else {
     categorySelected.value = category
-    allSelected.value = ref()
-    // $emit('onCategorySelected', category)
+    allSelected.value = null
+    emit('onCategorySelected', category)
   }
+
   
 };
-
 
 </script>
 
@@ -69,11 +70,11 @@ const selectCategory = (category) => {
     </div>
     <div class="tags-card">
       <div class="tags">
-        <span class="tag" :class="{active: allSelected == 'all'}" @click="selectCategory('all')">All</span>
+        <span class="tag" :class="{active: allSelected === 'all'}" @click="selectCategory('all')">All</span>
 
         <template v-for="category in categoriesArr" :key="category" >
           
-          <span class="tag" @click="selectCategory(category)" :class="{active: categorySelected == category}" @onCategorySelected="category">
+          <span class="tag" @click="selectCategory(category)" :class="{active: categorySelected == category}">
             {{ category }}
           </span>
         </template>

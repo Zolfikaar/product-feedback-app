@@ -1,11 +1,16 @@
 <script setup>
 import { useRouter, RouterView } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onUpdated,onMounted, ref } from 'vue'
 import Sidebar from '@/components/sidebar.vue'
 import Topbar from '@/components/topbar.vue'
 
 const router = useRouter()
 let showTopbarAndSidebar = ref(true)
+
+let selectedCategory = ref('all')
+const handleCategorySelected = ((category) => {
+  selectedCategory.value = category
+})
 
 router.beforeEach((to, from, next) => {
   showTopbarAndSidebar.value = to.meta.showTopbarAndSidebar !== false
@@ -19,11 +24,11 @@ router.beforeEach((to, from, next) => {
 
     <div class="content-wrapper">
       
-      <Sidebar v-if="showTopbarAndSidebar" />
+      <Sidebar v-if="showTopbarAndSidebar" @onCategorySelected="handleCategorySelected" />
       
       <div class="main-content">
         <Topbar v-if="showTopbarAndSidebar"  />
-        <RouterView />
+        <RouterView :categoryFilter="selectedCategory"/>
       </div>
       
     </div>
