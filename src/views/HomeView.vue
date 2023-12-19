@@ -50,10 +50,10 @@ const filteredFeedbacks = computed(() => {
 
 <template>
 
-  <div class="notifications-box">
+  <!-- <div class="notifications-box">
     <p>notification message goes here</p>
     <span>X</span>
-  </div>
+  </div> -->
   
   <div class="home-content">
 

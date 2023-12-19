@@ -25,8 +25,6 @@ let isEmptyDescription = ref(false)
 
 let notEmptyInputs = ref(false)
 
-const categorySelectedRef = ref(null);
-
 const props = defineProps({
   id: {
     type: String,
@@ -179,7 +177,7 @@ const deleteFeedback = () => {
     <nav class="new-feedback-navbar">
       <div>
         <leftArrowIcon />
-        <router-link to="/"><button class="go-back">Go Back</button></router-link>
+        <router-link :to="'/feedback-details/' + props.id"><button class="go-back">Go Back</button></router-link>
       </div>
       
     </nav>
@@ -204,9 +202,7 @@ const deleteFeedback = () => {
           <p>Choose a category for your feedback</p>
 
           <div class="select-box" @click="toggleDropdown" :class="[{active:showDropdown},{error: isEmptyCategory}]">
-            <!-- <div class="category-selected-value" ref="categorySelectedRef"> -->
             <div class="category-selected-value" >
-              <!-- {{ selectedCategoryIndex !== null ? categoriesArr[selectedCategoryIndex] : 'Select a category' }}  -->
               {{ selectedCategoryIndex !== null ? submitedCategory : 'Select a category' }}
             </div>
 
