@@ -8,10 +8,11 @@ import commentsIcon from '@/components/icons/comments.vue'
 
 let feedbacks = ref([])
 
-const props = defineProps(['categoryFilter']);
+const props = defineProps(['categoryFilter','topbarFilter']);
 
 onMounted( async () => {
   getAllFeedback()
+  console.log(props.topbarFilter);
 })
 
 const getAllFeedback = async () => {

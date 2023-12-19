@@ -52,7 +52,6 @@ const selectCategory = (category) => {
     allSelected.value = null
     emit('onCategorySelected', category)
   }
-
   
 };
 
