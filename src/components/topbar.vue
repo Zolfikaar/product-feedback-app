@@ -46,7 +46,7 @@ const selectFilter = (index, event) => {
   <nav class="topbar">
     <div class="suggestions-box">
       <iconSuggestions />
-      <h1 class="suggest-count"><span v-text="suggestionsCount >= 0 ? suggestionsCount : 0"></span> Suggestions</h1>
+      <h1 class="suggest-count"><span v-text="suggestionsCount ? suggestionsCount : 0"></span> Suggestions</h1>
       <span class="sort-by">Sort by: </span>
 
       <div class="filter-group">

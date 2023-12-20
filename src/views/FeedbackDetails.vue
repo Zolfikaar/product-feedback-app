@@ -1,11 +1,14 @@
 <script setup>
-  import { onMounted,ref } from 'vue';
+  import { onMounted,ref, computed } from 'vue';
+  import axios from "axios";
   import leftArrowIcon from '@/components/icons/arrowLeft.vue'
   import arrowUpIcon from '@/components/icons/arrowUp.vue'
   import commentsIcon from '@/components/icons/comments.vue'
 
   const feedback = ref({})
+  let currentFeedbackIndex = null
   const feedbacks = ref({})
+  const curentUserData = ref({})
 
   let id = ref()
   let title = ref({})
@@ -14,6 +17,8 @@
   let description = ''
   let category = ''
   let comments = []
+  let defaultCommentLength = 250
+  let currentUserComment = ref('')
 
   let showReplyBox = false
 
@@ -33,28 +38,38 @@
       description = feedback.value[0].description
       category = feedback.value[0].category
       comments = feedback.value[0].comments
-  })
-  
+      // console.log(comments);
+      // console.log(feedbacks.value);
+      getCurrentUserData()
+    })
+    
+  const getCurrentUserData = async () => {
+    let response = await axios.get('../../data.json')
+    curentUserData.value = response.data.currentUser
+  } 
 
   const getFeedback = async () => {
     let data = JSON.parse(localStorage.getItem('feedbacks'))
     feedbacks.value = data
     feedback.value = data.filter((item) => item.id == props.id)
+    currentFeedbackIndex = feedbacks.value.indexOf(feedback.value[0])
   } 
 
-  const userVoteing = function (feedback) {
-    if (!feedbacks.value[feedback].isVoted) {
-      feedbacks.value[feedback].isVoted = true
-      feedbacks.value[feedback].upvotes++
+  const userVoteing = function (index) {
+    
+    if (!feedbacks.value[index].isVoted) {
+    feedbacks.value[index].isVoted = true
+    feedbacks.value[index].upvotes++
+    isVoted = true
 
-      // Retrieve existing data from local storage
-      const storedData = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    // Retrieve existing data from local storage
+    const storedData = JSON.parse(localStorage.getItem('feedbacks')) || [];
 
-      // Update the specific feedback item in the local storage data
-      storedData[feedback] = feedbacks.value[feedback];
+    // Update the specific feedback item in the local storage data
+    storedData[index] = feedbacks.value[index];
 
-      // Save the modified data back to local storage
-      localStorage.setItem('feedbacks', JSON.stringify(storedData));
+    // Save the modified data back to local storage
+    localStorage.setItem('feedbacks', JSON.stringify(storedData));
     }
   }
 
@@ -62,6 +77,64 @@
     showReplyBox = true
     console.log(userToReplyOn);
   }
+
+  const charactersLeft = computed (() => {
+    if(defaultCommentLength - currentUserComment.value.length >= 0) {
+      return defaultCommentLength - currentUserComment.value.length
+    } 
+    return 0
+  })
+
+  const handleCurrentUserComment = (e) => {
+    // e.preventDefault()
+    if (e.target.value > defaultCommentLength) {
+      let length = e.target.value.length;
+      e.target.value = e.target.value.slice(0, length - 1);
+      // return false;
+      currentUserComment.value = e.target.value
+    }
+  }
+  
+  const onSubmitComment = () => {
+
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
+    let currentFeedback = feedbacks.filter((item) => item.id == props.id)
+
+    // delete the current feedback with old data
+    let index = feedbacks.indexOf(currentFeedback[0])
+
+    if(index > -1) { // only splice array when item is found
+      feedbacks.splice(index, 1) // 2nd parameter means remove one item only
+    }
+
+    let newComment = {
+      id: (feedback.value[0].comments.slice(-1)[0].id) + 1, // get last item id's
+      content: currentUserComment.value,
+      user: curentUserData.value
+    }
+
+    let currentComment = feedback.value[0].comments
+    currentComment.push(newComment)
+
+    let updatedFeedback = {
+      id: feedback.value[0].id,
+      title: feedback.value[0].title,
+      category: feedback.value[0].category,
+      description: feedback.value[0].description,
+      status: feedback.value[0].status,
+      upvotes: feedback.value[0].upvotes,
+      comments: currentComment
+    }
+    
+    // Push the new feedback into the array with the new data
+    feedbacks.push(updatedFeedback);
+
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    // reset input field
+    currentUserComment.value = ''
+  }
+
 </script>
 
 <template>
@@ -84,7 +157,7 @@
 
           <div class="left-side">
 
-            <div class="vote-count-box"  @click="userVoteing(feedback)">
+            <div class="vote-count-box"  @click="userVoteing(currentFeedbackIndex)">
               <arrowUpIcon :isVoted="isVoted" />
               <span class="votes">{{ upvotes }}</span>
             </div>
@@ -208,17 +281,18 @@
 
         <h3>Add Comment</h3>
 
-        <div class="user-comment-box">
-          <input type="text" class="current-user-input" placeholder="Type your comment here">
+        
+        <div class="user-comment-box" :style="{'border: 2px soild red;' : charactersLeft < 0}">
+          <input type="text" class="current-user-input" placeholder="Type your comment here" v-model="currentUserComment" :max="defaultCommentLength" min="0" @input="handleCurrentUserComment($event)">
         </div>
         
         <div class="user-comment-footer">
-          <p>250 Characters left</p>
+          <p>{{ charactersLeft }} Characters left</p>
           
-          <button class="primary">Post Comment</button>
+          <button class="primary" @click="onSubmitComment()">Post Comment</button>
         </div>
 
-      </div>
+      </div> 
 
     </div>
   </div>

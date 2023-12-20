@@ -122,7 +122,7 @@ const onSubmit = () => {
 
    if(index > -1) { // only splice array when item is found
     feedbacks.splice(index, 1) // 2nd parameter means remove one item only
-  }
+   }
 
    let updatedFeedback = {
     id: Number(props.id),
