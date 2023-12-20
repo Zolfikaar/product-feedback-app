@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { defineEmits, onMounted, ref } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['onFilterSelected'])
@@ -38,6 +38,7 @@ const selectFilter = (index, event) => {
   event.stopPropagation(); // Stop event propagation
   toggleFilterDropdown()
   selectedFilter.value = filtersArr[index]
+  emit('onFilterSelected', selectedFilter.value)
 }
 </script>
 

@@ -12,16 +12,15 @@ const props = defineProps(['categoryFilter','topbarFilter']);
 
 onMounted( async () => {
   getAllFeedback()
-  console.log(props.topbarFilter);
 })
-
+ 
 const getAllFeedback = async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
     let response = await axios.get('../../data.json')
     feedbacks.value = response.data.productRequests
-    saveFeedbacks(feedbacks.value)
+    localStorage.setItem('feedbacks',JSON.stringify(feedbacks.value))
   }
 }
 
@@ -41,10 +40,24 @@ const userVoteing = function (feedbackIndex) {
   }
 }
 
-const saveFeedbacks = function (feedback) {localStorage.setItem('feedbacks',JSON.stringify(feedback))}
-
 const filteredFeedbacks = computed(() => {
-  return props.categoryFilter === 'all' ? feedbacks.value : feedbacks.value.filter(feedback => feedback.category === props.categoryFilter);
+  let filteredData = [...feedbacks.value];
+
+  if (props.categoryFilter !== 'all') {
+      filteredData = filteredData.filter(feedback => feedback.category === props.categoryFilter);
+  }
+
+  if (props.topbarFilter === 'Most upvotes') {
+      filteredData = filteredData.slice().sort((a, b) => b.upvotes - a.upvotes);
+    } else if (props.topbarFilter === 'Least upvotes') {
+      filteredData = filteredData.slice().sort((a, b) => a.upvotes - b.upvotes);
+    } else if (props.topbarFilter === 'Most comments') {
+      filteredData = filteredData.slice().sort((a, b) => (b.comments ? b.comments.length : 0) - (a.comments ? a.comments.length : 0));
+    } else if (props.topbarFilter === 'Least comments') {
+      filteredData = filteredData.slice().sort((a, b) => (a.comments ? a.comments.length : 0) - (b.comments ? b.comments.length : 0));
+    }
+
+  return filteredData;
 });
 
 </script>

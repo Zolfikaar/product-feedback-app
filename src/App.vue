@@ -8,9 +8,9 @@ const router = useRouter()
 let showTopbarAndSidebar = ref(true)
 
 let selectedCategory = ref('all')
-const handleCategorySelected = ((category) => {
-  selectedCategory.value = category
-})
+let selectedFilter = ref('Most upvotes')
+const handleCategorySelected = category => selectedCategory.value = category
+const handleFilterSelected = filter => selectedFilter.value = filter
 
 router.beforeEach((to, from, next) => {
   showTopbarAndSidebar.value = to.meta.showTopbarAndSidebar !== false
@@ -27,8 +27,9 @@ router.beforeEach((to, from, next) => {
       <Sidebar v-if="showTopbarAndSidebar" @onCategorySelected="handleCategorySelected" />
       
       <div class="main-content">
-        <Topbar v-if="showTopbarAndSidebar"  />
-        <RouterView :categoryFilter="selectedCategory"/>
+        <Topbar v-if="showTopbarAndSidebar" 
+        @onFilterSelected="handleFilterSelected" />
+        <RouterView :categoryFilter="selectedCategory" :topbarFilter="selectedFilter"/>
       </div>
       
     </div>

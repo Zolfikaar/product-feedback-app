@@ -13,7 +13,10 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       meta: { showTopbarAndSidebar: true },
-      props: route => ({ categoryFilter: route.params.categoryFilter || 'all' }),
+      props: (route) => (
+        { categoryFilter: route.params.categoryFilter || "all" },
+        { topbarFilter: route.params.topbarFilter || "Most upvotes" }
+      ),
     },
     {
       path: "/new-feedback",
