@@ -17,10 +17,6 @@
   let description = ''
   let category = ''
   let comments = []
-  let defaultCommentLength = 250
-  let currentUserComment = ref('')
-
-  let showReplyBox = false
 
   const props = defineProps({
     id: {
@@ -38,10 +34,10 @@
       description = feedback.value[0].description
       category = feedback.value[0].category
       comments = feedback.value[0].comments
-      // console.log(comments);
-      // console.log(feedbacks.value);
       getCurrentUserData()
-    })
+
+      // console.log(feedback.value[0].comments);
+  })
     
   const getCurrentUserData = async () => {
     let response = await axios.get('../../data.json')
@@ -73,10 +69,8 @@
     }
   }
 
-  const replyOn = (userToReplyOn) => {
-    showReplyBox = true
-    console.log(userToReplyOn);
-  }
+  let defaultCommentLength = 250
+  let currentUserComment = ref('')
 
   const charactersLeft = computed (() => {
     if(defaultCommentLength - currentUserComment.value.length >= 0) {
@@ -86,11 +80,9 @@
   })
 
   const handleCurrentUserComment = (e) => {
-    // e.preventDefault()
     if (e.target.value > defaultCommentLength) {
       let length = e.target.value.length;
       e.target.value = e.target.value.slice(0, length - 1);
-      // return false;
       currentUserComment.value = e.target.value
     }
   }
@@ -133,6 +125,73 @@
 
     // reset input field
     currentUserComment.value = ''
+  }
+
+
+
+
+  let showReplyBoxOnReply = ref([])
+  const showReplyBoxForReplyOnReply = (userToReplyOn, replyIndex,comment) => {
+
+    let commentIndex = comments.indexOf(comment)
+
+    let reply = comments[commentIndex].replies[replyIndex];
+
+    showReplyBoxOnReply.value[replyIndex] = true
+
+    
+  }
+
+
+
+
+  let showReplyBoxOnComment = ref({})
+  let commentToReplyOn = ref({})
+  let curentUserReplyOnComment = ref('')
+  let userToReplyTo = ref({})
+  const showReplyBoxForReplyOnComment = (userToReplyOn, commentIndex) => {
+    // show Reply Box for the specific comment based on comment id
+    const commentId = comments[commentIndex].id;
+    showReplyBoxOnComment.value[commentId] = true;
+
+    commentToReplyOn.value = comments[commentIndex]
+    userToReplyTo.value = userToReplyOn
+  }
+
+  const handleReplyOnComment = (e) => {
+    if (e.target.value > defaultCommentLength) {
+      let length = e.target.value.length;
+      e.target.value = e.target.value.slice(0, length - 1);
+      curentUserReplyOnComment.value = e.target.value
+    }
+  }
+
+  const onSubmitReplyOnComment = () => {
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
+    let currentFeedback = feedbacks.filter((item) => item.id == props.id)
+
+    let currentCommentIndex = feedback.value[0].comments.indexOf(commentToReplyOn.value)
+
+    let currentComment = feedback.value[0].comments[currentCommentIndex]
+
+    let newReply = {
+      content: curentUserReplyOnComment.value,
+      replyingTo: userToReplyTo.value,
+      user: curentUserData.value,
+    }
+
+    let currentReply = commentToReplyOn.value.replies || [];
+    currentReply.push(newReply);
+    
+    currentComment.replies = currentReply
+    
+    currentFeedback[0].comments[currentCommentIndex] = currentComment;
+
+    // Save the updated feedback back to local storage
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+
+    // reset input field
+    curentUserReplyOnComment.value = '';
   }
 
 </script>
@@ -208,7 +267,7 @@
               </div>
               
 
-              <span class="reply-btn" @click="replyOn(comment.user.username)">reply</span>
+              <span class="reply-btn" @click="showReplyBoxForReplyOnComment(comment.user.username,index)">reply</span>
 
             </div>
 
@@ -217,9 +276,10 @@
               <p>{{ comment.content }}</p>
 
               
-                <div class="post-reply" v-if="showReplyBox">
-                  <input type="text" class="post-reply-input" placeholder="Type your comment here">
-                  <button class="primary">Post Reply</button>
+                <div class="post-reply" v-if="showReplyBoxOnComment[comment.id]">
+                  <input type="text" class="post-reply-input" placeholder="Type your comment here" :max="defaultCommentLength" @input="handleReplyOnComment($event)"
+                  v-model="curentUserReplyOnComment">
+                  <button class="primary" @click="onSubmitReplyOnComment()">Post Reply</button>
                 </div>
 
 
@@ -248,7 +308,7 @@
 
                       </div>
 
-                      <span class="reply-btn" @click="replyOn(reply.user.username)">reply</span>
+                      <span class="reply-btn" @click="showReplyBoxForReplyOnReply(reply.user.username,index,comment)">reply</span>
                       
                     </div>
 
@@ -256,8 +316,8 @@
 
                       <p><span class="replying-to">@{{ reply.replyingTo }} </span>{{ reply.content }}</p>
 
-                      <div class="comment-reply" v-if="showReplyBox">
-                        <input type="text" class="comment-reply-input" placeholder="Type your comment here">
+                      <div class="comment-reply" v-if="showReplyBoxOnReply[index]">
+                        <input type="text" class="comment-reply-input" placeholder="Type your comment here" :max="defaultCommentLength" @input="handleReplyOnReply($event)">
                         <button class="primary">Post Reply</button>
                       </div>
 
