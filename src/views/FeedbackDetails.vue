@@ -98,37 +98,28 @@
     if(index > -1) { // only splice array when item is found
       feedbacks.splice(index, 1) // 2nd parameter means remove one item only
     }
-
+    
     let newComment = {
-      id: (feedback.value[0].comments.slice(-1)[0].id) + 1, // get last item id's
+      id:  feedback.value[0].comments ? (feedback.value[0].comments.slice(-1)[0]?.id || 0) + 1 : 1, // get last item id's
       content: currentUserComment.value,
       user: curentUserData.value
     }
 
-    let currentComment = feedback.value[0].comments
-    currentComment.push(newComment)
+    if(!feedback.value[0].comments) {
+      feedback.value[0].comments = [newComment]
 
-    let updatedFeedback = {
-      id: feedback.value[0].id,
-      title: feedback.value[0].title,
-      category: feedback.value[0].category,
-      description: feedback.value[0].description,
-      status: feedback.value[0].status,
-      upvotes: feedback.value[0].upvotes,
-      comments: currentComment
+    } else {
+      feedback.value[0].comments.push(newComment)
     }
-    
+
+    feedbacks.push(feedback.value[0]);
+
     // Push the new feedback into the array with the new data
-    feedbacks.push(updatedFeedback);
-
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
-
+    
     // reset input field
     currentUserComment.value = ''
   }
-
-
-
 
   let showReplyBoxOnReply = ref([])
   const showReplyBoxForReplyOnReply = (userToReplyOn, replyIndex,comment) => {
@@ -141,9 +132,6 @@
 
     
   }
-
-
-
 
   let showReplyBoxOnComment = ref({})
   let commentToReplyOn = ref({})
