@@ -91,13 +91,6 @@
 
     let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
     let currentFeedback = feedbacks.filter((item) => item.id == props.id)
-
-    // delete the current feedback with old data
-    let index = feedbacks.indexOf(currentFeedback[0])
-
-    if(index > -1) { // only splice array when item is found
-      feedbacks.splice(index, 1) // 2nd parameter means remove one item only
-    }
     
     let newComment = {
       id:  feedback.value[0].comments ? (feedback.value[0].comments.slice(-1)[0]?.id || 0) + 1 : 1, // get last item id's
@@ -112,6 +105,14 @@
       feedback.value[0].comments.push(newComment)
     }
 
+    // delete the current feedback with old data
+    let index = feedbacks.indexOf(currentFeedback[0])
+
+    if(index > -1) { // only splice array when item is found
+      feedbacks.splice(index, 1) // 2nd parameter means remove one item only
+    }
+
+    // feedbacks.push(feedback.value[0]);
     feedbacks.push(feedback.value[0]);
 
     // Push the new feedback into the array with the new data
@@ -582,4 +583,12 @@
   color: var(--deep-gray);
 }
 .current-user-comment .user-comment-footer button{}
+
+@media screen and (min-width: 375px) and (max-width: 768px){}
+
+@media screen and (min-width: 787px) and (max-width: 1200px){
+  .feedback-details{
+    width: 100%;
+  }
+}
 </style>

@@ -195,19 +195,9 @@ const selectCategory = (category) => {
 .sidebar .roadmap-card .roadmap-body > div.col:nth-child(1) > div,
 .sidebar .roadmap-card .roadmap-body > div.col:nth-child(2) > div,
 .sidebar .roadmap-card .roadmap-body > div.col:nth-child(3) > div{display: flex; align-items: center;}
-
 .sidebar .roadmap-card .roadmap-body > div.col > div > span{margin-right: 10px;}
-
-.sidebar .roadmap-card .roadmap-body > div.col:nth-child(1) > div:nth-child(1) > span{
-  background-color: var(--orang);
-}
-.sidebar .roadmap-card .roadmap-body > div.col:nth-child(2) > div:nth-child(1) > span{
-  background-color: var(--primary);
-}
-.sidebar .roadmap-card .roadmap-body > div.col:nth-child(3) > div:nth-child(1) > span{
-  background-color: var(--light-blue);
-}
-.sidebar > div.roadmap-card > div.roadmap-body > div > div:nth-child(2) > p{
-  font-weight: bold;
-}
+.sidebar .roadmap-card .roadmap-body > div.col:nth-child(1) > div:nth-child(1) > span{background-color: var(--orang);}
+.sidebar .roadmap-card .roadmap-body > div.col:nth-child(2) > div:nth-child(1) > span{background-color: var(--primary);}
+.sidebar .roadmap-card .roadmap-body > div.col:nth-child(3) > div:nth-child(1) > span{background-color: var(--light-blue);}
+.sidebar > div.roadmap-card > div.roadmap-body > div > div:nth-child(2) > p{font-weight: bold;}
 </style>

@@ -108,9 +108,6 @@ const selectFilter = (index, event) => {
   display: flex;
   align-items: center;
 }
-
-
-
 .topbar .suggestions-box .filter-group{margin: 20px 0;}
 .topbar .suggestions-box .filter-group .select-box{
   width: 180px;
@@ -148,13 +145,6 @@ const selectFilter = (index, event) => {
 .topbar .suggestions-box .filter-group .select-box .filter-dropdown .filter:not(:last-child){border-bottom: 1px solid rgba(0,0,0,.15);}
 .topbar .suggestions-box .filter-group .select-box .filter-dropdown .filter:hover,
 .topbar .suggestions-box .filter-group .select-box .filter-dropdown .filter.selected{color: var(--primary);}
-
-
-
-
-
-
-
 .suggestions-box svg{margin-left: 20px;}
 .suggestions-box .suggest-count{margin: 0 50px 0 20px;}
 .suggestions-box .sort-by{

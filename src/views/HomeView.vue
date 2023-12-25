@@ -38,6 +38,8 @@ const userVoteing = function (feedbackIndex) {
     // Save the modified data back to local storage
     localStorage.setItem('feedbacks', JSON.stringify(storedData));
   }
+
+  // console.log(!feedbacks.value[feedbackIndex].isVoted);
 }
 
 const filteredFeedbacks = computed(() => {

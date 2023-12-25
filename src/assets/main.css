@@ -13,3 +13,7 @@
 .no-feedback p{
   margin-bottom: 50px;
 }
+
+@media screen and (min-width: 375px) and (max-width: 768px){}
+
+@media screen and (min-width: 787px) and (max-width: 1200px){}

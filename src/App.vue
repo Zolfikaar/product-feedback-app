@@ -49,4 +49,28 @@ router.beforeEach((to, from, next) => {
 .main-content{
   width: 100%;
 }
+
+@media screen and (min-width: 375px) and (max-width: 768px){}
+
+@media screen and (min-width: 787px) and (max-width: 1200px){
+  .content-wrapper{
+    flex-direction: column;
+  }
+  .sidebar{
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: unset;
+  }
+  .sidebar .roadmap-card,
+  .sidebar .tags-card,
+  .sidebar .project-card {
+    width: 223px;
+    height: 178px;
+  }
+  .sidebar .project-card {
+    background-image: url(/suggestions/tablet/background-header.png);
+  }
+}
 </style>

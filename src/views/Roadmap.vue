@@ -374,4 +374,15 @@ const userVoting = (item) => {
   margin-left: 15px;
   font-weight: bold;
 }
+
+@media screen and (min-width: 375px) and (max-width: 768px){}
+
+@media screen and (min-width: 787px) and (max-width: 1200px){
+  .roadmap{
+    width: 100%;
+  }
+  .roadmap-navbar{
+    width: 100%;
+  }
+}
 </style>
