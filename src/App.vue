@@ -50,27 +50,24 @@ router.beforeEach((to, from, next) => {
   width: 100%;
 }
 
-@media screen and (min-width: 375px) and (max-width: 768px){}
-
-@media screen and (min-width: 787px) and (max-width: 1200px){
+@media screen and (min-width: 375px) and (max-width: 768px){
+  #app{
+    margin-top: unset;
+  }
+  .container{
+    width: 100%;
+    margin-left: unset;
+    margin-right: unset;
+  }
   .content-wrapper{
     flex-direction: column;
   }
-  .sidebar{
-    max-width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-right: unset;
-  }
-  .sidebar .roadmap-card,
-  .sidebar .tags-card,
-  .sidebar .project-card {
-    width: 223px;
-    height: 178px;
-  }
-  .sidebar .project-card {
-    background-image: url(/suggestions/tablet/background-header.png);
+  
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px){
+  .content-wrapper{
+    flex-direction: column;
   }
 }
 </style>

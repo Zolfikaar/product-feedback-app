@@ -219,4 +219,30 @@ const filteredFeedbacks = computed(() => {
   font-weight: bold;
 }
 
+@media screen and (min-width: 375px) and (max-width: 768px){
+.home-content{
+  margin: 0 20px;
+}
+.suggestion-holder .suggestion{
+  align-items: end;
+}
+.suggestion-holder .suggestion .left-side{
+  flex-direction: column-reverse;
+}
+.suggestion-holder .suggestion .left-side .feedback-box{
+  margin-left: unset;
+  margin-right: unset;
+  margin-bottom: 20px;
+}
+.suggestion-holder .suggestion .right-side.comments,
+.suggestion-holder .suggestion .left-side .vote-count-box{
+  margin-bottom: 20px;
+}
+.suggestion-holder .suggestion .left-side .vote-count-box{
+  flex-direction: unset;
+  width: 80px;
+  height: 40px;
+  justify-content: space-evenly;
+}
+}
 </style>

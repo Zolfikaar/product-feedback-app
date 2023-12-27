@@ -344,4 +344,28 @@ const deleteFeedback = () => {
   margin: 40px 0 20px 0;
 }
 .new-feedback-content form .btns .primary{margin-left: 10px;}
+
+@media screen and (min-width: 375px) and (max-width: 768px){
+  .new-feedback{
+    width: calc(100% - 40px);
+  }
+  .new-feedback-content {
+    padding: 20px;
+  }
+  .new-feedback-content form .btns{
+    flex-direction: column;
+  }
+  .new-feedback-content form .btns button{
+    width: 100%;
+  }
+  /* .new-feedback-content form .btns > div:nth-child(2) button:first-child{
+    margin: 20px 0;
+  } */
+  .new-feedback-content form .btns .deep-dark-gray{
+    margin: 20px 0;
+  }
+  .new-feedback-content form .btns .primary{margin-left: unset;}
+}
+@media screen and (min-width: 769px) and (max-width: 1200px){
+}
 </style>

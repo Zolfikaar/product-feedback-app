@@ -293,4 +293,13 @@ const onSubmit = () => {
   margin: 40px 0 20px 0;
 }
 .new-feedback-content form .btns .primary{margin-left: 10px;}
+
+@media screen and (min-width: 375px) and (max-width: 768px){
+  .new-feedback{
+    width: calc(100% - 40px);
+  }
+}
+@media screen and (min-width: 769px) and (max-width: 1200px){
+}
+
 </style>

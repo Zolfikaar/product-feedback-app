@@ -45,7 +45,7 @@ const selectFilter = (index, event) => {
 <template>
   <nav class="topbar">
     <div class="suggestions-box">
-      <iconSuggestions />
+      <iconSuggestions class="suggestions-icon" />
       <h1 class="suggest-count"><span v-text="suggestionsCount ? suggestionsCount : 0"></span> Suggestions</h1>
       <span class="sort-by">Sort by: </span>
 
@@ -164,5 +164,39 @@ const selectFilter = (index, event) => {
 .suggestions-box select option:hover{
   cursor: pointer;
   color: var(--primary);
+}
+
+@media screen and (min-width: 375px) and (max-width: 768px){
+  .topbar{
+    border-radius: unset;
+  }
+  .topbar a button{
+    width: 134px;
+  }
+  .topbar .suggestions-box svg.suggestions-icon{
+    display: none;
+  }
+  .suggestions-box svg{
+    margin-left: 10px;
+  }
+.topbar .suggestions-box .suggest-count{
+  display: none;
+}
+.topbar .suggestions-box .sort-by{
+  margin-left: 20px;
+  margin-right: unset;
+}
+.topbar .suggestions-box .filter-group{
+  margin: unset;
+}
+.topbar .suggestions-box .filter-group .select-box{
+  width: unset;
+  padding: 0 10px;
+}
+.topbar .suggestions-box .filter-group .select-box .filter-dropdown{
+  left: -25px;
+  width: 250px;
+}
+
 }
 </style>

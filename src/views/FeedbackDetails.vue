@@ -199,7 +199,7 @@
 
     <div class="details-content">
       
-      <div class="feedback-details">
+      <div class="feedback-detail">
 
         <div class="suggestion" :class="{voted: isVoted}">
 
@@ -582,11 +582,39 @@
 .current-user-comment .user-comment-footer p{
   color: var(--deep-gray);
 }
-.current-user-comment .user-comment-footer button{}
 
-@media screen and (min-width: 375px) and (max-width: 768px){}
+@media screen and (min-width: 375px) and (max-width: 768px){
+  .feedback-details{
+    width: calc(100% - 40px);
+    margin: 0 20px;
+  }
+  .suggestion{
+    align-items: end;
+  }
+  .suggestion .left-side{
+    flex-direction: column-reverse;
+  }
+  .suggestion .left-side .feedback-box{
+    margin-left: unset;
+    margin-right: unset;
+    margin-bottom: 20px;
+  }
+  .suggestion .right-side.comments,
+  .suggestion .left-side .vote-count-box{
+    margin-bottom: 20px;
+  }
+  .suggestion .left-side .vote-count-box{
+    flex-direction: unset;
+    width: 80px;
+    height: 40px;
+    justify-content: space-evenly;
+  }
+  .feedback-comments .comments-wrapper .comment .comment-body{margin-left: 20px;margin-right: 20px;}
+  .comment-body .comment-replies .comment-reply .reply-header .reply-btn {margin-right: unset;}
+  .comment-body .comment-replies .comment-reply .reply-body{margin-left: 20px;}
+}
 
-@media screen and (min-width: 787px) and (max-width: 1200px){
+@media screen and (min-width: 769px) and (max-width: 1200px){
   .feedback-details{
     width: 100%;
   }

@@ -1,6 +1,8 @@
 <script setup>
 import { defineEmits,onMounted, ref } from 'vue'
 import axios from 'axios'
+import menuIcon from '@/components/icons/hamburger.vue'
+import closeIcon from '@/components/icons/close.vue'
 
 const emit = defineEmits(['onCategorySelected'])
 
@@ -11,6 +13,8 @@ let inProgressCount = ref({})
 let liveCount = ref({})
 let allSelected = ref('all')
 let categorySelected = ref({})
+
+
 
 onMounted( async () => {
   getData()
@@ -55,6 +59,13 @@ const selectCategory = (category) => {
   
 };
 
+let openMenu = ref(false)
+let showSidebarCardsAtMobile = ref(false)
+
+const toggleMenu = () => {
+  openMenu.value = !openMenu.value
+  showSidebarCardsAtMobile.value = !showSidebarCardsAtMobile.value
+}
 </script>
 
 <template>
@@ -67,7 +78,7 @@ const selectCategory = (category) => {
         <p>Feedback Board</p>
       </div>
     </div>
-    <div class="tags-card">
+    <div class="tags-card" >
       <div class="tags">
         <span class="tag" :class="{active: allSelected === 'all'}" @click="selectCategory('all')">All</span>
 
@@ -79,7 +90,7 @@ const selectCategory = (category) => {
         </template>
       </div>
     </div>
-    <div class="roadmap-card">
+    <div class="roadmap-card" >
 
       <div class="roadmap-header">
         <h1>Roadmap</h1>
@@ -117,6 +128,71 @@ const selectCategory = (category) => {
       </div>
 
     </div>
+
+    <div class="menu-btns" @click="toggleMenu">
+      <div class="hamburger-btn" >
+        <menuIcon v-if="!openMenu" />
+      </div>
+      <div class="close-btn" >
+        <closeIcon v-if="openMenu"/>
+      </div>
+    </div>
+
+    <div class="menu-box" v-if="openMenu">
+      <div class="content-box" v-if="showSidebarCardsAtMobile">
+        <div class="tags-card" >
+          <div class="tags">
+            <span class="tag" :class="{active: allSelected === 'all'}" @click="selectCategory('all')">All</span>
+
+            <template v-for="category in categoriesArr" :key="category" >
+              
+              <span class="tag" @click="selectCategory(category)" :class="{active: categorySelected == category}">
+                {{ category }}
+              </span>
+            </template>
+          </div>
+        </div>
+        <div class="roadmap-card" >
+
+          <div class="roadmap-header">
+            <h1>Roadmap</h1>
+            <router-link to="/roadmap">View</router-link>
+          </div>
+
+          <div class="roadmap-body">
+            <div class="col">
+              <div>
+                <span></span>
+                <p>Planned</p>
+              </div>
+              <div>
+                <p>{{ plannedCount.length }}</p>
+              </div>
+            </div>
+            <div class="col">
+              <div>
+                <span></span>
+                <p>In-Progress</p>
+              </div>
+              <div>
+                <p>{{ inProgressCount.length }}</p>
+              </div>
+            </div>
+            <div class="col">
+              <div>
+                <span></span>
+                <p>Live</p>
+              </div>
+              <div>
+                <p>{{ liveCount.length }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </template>
@@ -200,4 +276,112 @@ const selectCategory = (category) => {
 .sidebar .roadmap-card .roadmap-body > div.col:nth-child(2) > div:nth-child(1) > span{background-color: var(--primary);}
 .sidebar .roadmap-card .roadmap-body > div.col:nth-child(3) > div:nth-child(1) > span{background-color: var(--light-blue);}
 .sidebar > div.roadmap-card > div.roadmap-body > div > div:nth-child(2) > p{font-weight: bold;}
+.sidebar .menu-box,
+.sidebar .menu-btns{
+  display: none;
+}
+
+
+@media screen and (min-width: 375px) and (max-width: 768px){
+.sidebar{
+    position: relative;
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: unset;
+  }
+
+  .sidebar .project-card {
+    background-image: url(/suggestions/mobile/background-header.png);
+    background-size: cover;
+    width: 100%;
+    height: 72px;
+    border-radius: unset;
+  }
+  
+  .sidebar .menu-btns{
+    display: block;
+    position: absolute;
+    right: 20px;
+  }
+  .sidebar .menu-btns:hover{
+    cursor: pointer;
+  }
+  .sidebar .menu-btns .hamburger-btn{
+    display: block;
+  }
+  .sidebar .menu-btns .close-btn{
+    display: block;
+  }
+  
+  .sidebar .menu-box{
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 72px;
+    background-color: rgba(0, 0, 0, .3);
+    z-index: 10;
+    height: 100vh;
+    width: 100%;
+  }
+  .sidebar .menu-box .content-box{
+    position: absolute;
+    right: 0;
+    z-index: 11;
+    height: 100vh;
+    background-color: var(--light-gray);
+    width: 70%;
+  }
+
+
+  .sidebar .project-card .details {
+    bottom: unset;
+  }
+  .sidebar .roadmap-card{
+    top: 275px;
+  }
+  .sidebar .tags-card{
+    top: 75px;
+  }
+
+  .sidebar .roadmap-card,
+  .sidebar .tags-card{
+    display: none;
+    position: absolute;
+    right: 20px;
+    z-index: 12;
+    width: 60%;
+  }
+  .sidebar .menu-box .content-box .roadmap-card,
+  .sidebar .menu-box .content-box .tags-card{
+    position: unset;
+    display: block;
+    width: 90%;
+    margin: 20px auto;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px){
+  .sidebar{
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: unset;
+  }
+  .sidebar .roadmap-card,
+  .sidebar .tags-card,
+  .sidebar .project-card {
+    width: 223px;
+    height: 178px;
+  }
+  .sidebar .roadmap-card,
+  .sidebar .tags-card{
+    display: block;
+  }
+  .sidebar .project-card {
+    background-image: url(/suggestions/tablet/background-header.png);
+  }
+}
 </style>
