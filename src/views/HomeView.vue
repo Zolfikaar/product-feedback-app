@@ -24,22 +24,27 @@ const getAllFeedback = async () => {
   }
 }
 
-const userVoteing = function (feedbackIndex) {
-  if (!feedbacks.value[feedbackIndex].isVoted) {
-    feedbacks.value[feedbackIndex].isVoted = true
-    feedbacks.value[feedbackIndex].upvotes++
+const userVoteing = function (feedbackId) {
 
-    // Retrieve existing data from local storage
-    const storedData = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    // Find the index of the feedback in the array
+  const currentFeedbackIndex = feedbacks.value.findIndex((item) => item.id === feedbackId);
 
-    // Update the specific feedback item in the local storage data
-    storedData[feedbackIndex] = feedbacks.value[feedbackIndex];
+  if (currentFeedbackIndex !== -1) {
+    const currentFeedback = feedbacks.value[currentFeedbackIndex];
 
-    // Save the modified data back to local storage
-    localStorage.setItem('feedbacks', JSON.stringify(storedData));
+    if (!currentFeedback.isVoted) {
+      // Update the feedback in the array
+      feedbacks.value[currentFeedbackIndex] = {
+        ...currentFeedback,
+        isVoted: true,
+        upvotes: currentFeedback.upvotes + 1,
+      };
+
+      // Update local storage with the modified feedbacks array
+      localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
+    }
   }
-
-  // console.log(!feedbacks.value[feedbackIndex].isVoted);
+  
 }
 
 const filteredFeedbacks = computed(() => {
@@ -77,11 +82,11 @@ const filteredFeedbacks = computed(() => {
       
       <div class="suggestion-holder" v-if="filteredFeedbacks" >
 
-        <div class="suggestion" :class="{voted: feedback.isVoted}" v-for="(feedback, index) in filteredFeedbacks" :key="index">
+        <div class="suggestion" :class="{voted: feedback.isVoted}" v-for="feedback in filteredFeedbacks" :key="feedback">
 
           <div class="left-side">
 
-            <div class="vote-count-box"  @click="userVoteing(index)">
+            <div class="vote-count-box"  @click="userVoteing(feedback.id)">
               <arrowUpIcon :isVoted="feedback.isVoted" />
               <span class="votes">{{ feedback.upvotes }}</span>
             </div>
