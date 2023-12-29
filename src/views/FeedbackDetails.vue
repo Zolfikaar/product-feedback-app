@@ -79,6 +79,8 @@
     return 0
   })
 
+  //////////////////////////////////// current user comment functions ///////////////////////////////////
+
   const handleCurrentUserComment = (e) => {
     if (e.target.value > defaultCommentLength) {
       let length = e.target.value.length;
@@ -122,22 +124,13 @@
     currentUserComment.value = ''
   }
 
-  let showReplyBoxOnReply = ref([])
-  const showReplyBoxForReplyOnReply = (userToReplyOn, replyIndex,comment) => {
-
-    let commentIndex = comments.indexOf(comment)
-
-    let reply = comments[commentIndex].replies[replyIndex];
-
-    showReplyBoxOnReply.value[replyIndex] = true
-
-    
-  }
+  //////////////////////////////////// reply on comment functions ///////////////////////////////////
 
   let showReplyBoxOnComment = ref({})
   let commentToReplyOn = ref({})
   let curentUserReplyOnComment = ref('')
   let userToReplyTo = ref({})
+
   const showReplyBoxForReplyOnComment = (userToReplyOn, commentIndex) => {
     // show Reply Box for the specific comment based on comment id
     const commentId = comments[commentIndex].id;
@@ -181,8 +174,59 @@
 
     // reset input field
     curentUserReplyOnComment.value = '';
+
+    // hide reply box
+    showReplyBoxOnComment.value = false
   }
 
+  //////////////////////////////////// reply on reply functions ///////////////////////////////////
+
+  let showReplyBoxOnReply = ref([])
+  let replyToReplyOn = ref({})
+  let curentUserReplyOnReply = ref('')
+  const showReplyBoxForReplyOnReply = (userToReplyOn, replyIndex,commentIndex) => {
+
+    // show reply box for the specific reply based on reply index
+    showReplyBoxOnReply.value[replyIndex] = true
+
+    let reply = comments[commentIndex].replies[replyIndex]; // maybe not needed
+
+    // replyToReplyOn.value = replies[replyIndex]
+
+    // console.log(userToReplyTo.value);
+    userToReplyTo.value = userToReplyOn
+    // console.log(userToReplyTo.value);
+  }
+
+  const handleReplyOnReply = (e) => {
+    if (e.target.value > defaultCommentLength) {
+      let length = e.target.value.length;
+      e.target.value = e.target.value.slice(0, length - 1);
+      curentUserReplyOnReply.value = e.target.value
+    }
+  }
+  
+  const onSubmitReplyOnReply = (commentIndex) => {
+    let feedbacks = JSON.parse(localStorage.getItem('feedbacks'))
+    let currentFeedback = feedbacks.filter((item) => item.id == props.id)
+
+    let newReply = {
+      content: curentUserReplyOnReply.value,
+      replyingTo: userToReplyTo.value,
+      user: curentUserData.value,
+    }
+
+    let currentComment = currentFeedback[0].comments[commentIndex]
+
+    currentComment.replies.push(newReply)
+
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks))
+
+
+    // reset the input and hide the reply box
+    curentUserReplyOnReply.value = ''
+    showReplyBoxOnReply.value = false
+  }
 </script>
 
 <template>
@@ -237,7 +281,7 @@
 
         <div class="comments-wrapper" >
 
-          <div class="comment" v-for="(comment, index) in comments" :key="index">
+          <div class="comment" v-for="(comment, commentIndex) in comments" :key="commentIndex">
 
             <hr>
 
@@ -256,7 +300,7 @@
               </div>
               
 
-              <span class="reply-btn" @click="showReplyBoxForReplyOnComment(comment.user.username,index)">reply</span>
+              <span class="reply-btn" @click="showReplyBoxForReplyOnComment(comment.user.username,commentIndex)">reply</span>
 
             </div>
 
@@ -280,7 +324,7 @@
 
                 <div class="comment-reply">
 
-                  <div class="reply" v-for="(reply, index) in comment.replies" :key="index">
+                  <div class="reply" v-for="(reply, replyIndex) in comment.replies" :key="replyIndex">
 
 
                     <div class="reply-header">
@@ -297,7 +341,7 @@
 
                       </div>
 
-                      <span class="reply-btn" @click="showReplyBoxForReplyOnReply(reply.user.username,index,comment)">reply</span>
+                      <span class="reply-btn" @click="showReplyBoxForReplyOnReply(reply.user.username,replyIndex,commentIndex)">reply</span>
                       
                     </div>
 
@@ -305,9 +349,9 @@
 
                       <p><span class="replying-to">@{{ reply.replyingTo }} </span>{{ reply.content }}</p>
 
-                      <div class="comment-reply" v-if="showReplyBoxOnReply[index]">
-                        <input type="text" class="comment-reply-input" placeholder="Type your comment here" :max="defaultCommentLength" @input="handleReplyOnReply($event)">
-                        <button class="primary">Post Reply</button>
+                      <div class="comment-reply" v-if="showReplyBoxOnReply[replyIndex]">
+                        <input type="text" class="comment-reply-input" placeholder="Type your comment here" :max="defaultCommentLength" @input="handleReplyOnReply($event)" v-model="curentUserReplyOnReply">
+                        <button class="primary" @click="onSubmitReplyOnReply(commentIndex)">Post Reply</button>
                       </div>
 
                     </div>
@@ -474,7 +518,7 @@
 .feedback-comments .comments-wrapper .comment .comment-header .user-details{margin-left: 20px;}
 .feedback-comments .comments-wrapper .comment .comment-header .user-details .name{color: var(--deep-dark-gray);}
 .feedback-comments .comments-wrapper .comment .comment-header .user-details .user{font-weight: normal;color: var(--deep-gray);}
-.feedback-comments .comments-wrapper .comment .comment-body{margin: 20px 0 20px 80px;position: relative;}
+.feedback-comments .comments-wrapper .comment .comment-body{margin: 20px 0 20px 80px;position: relative;overflow: hidden;}
 .feedback-comments .comments-wrapper .comment .comment-body p{
   color: var(--deep-gray);
   margin-bottom: 20px;

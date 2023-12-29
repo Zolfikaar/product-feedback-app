@@ -45,26 +45,29 @@ const Live = (data) => {
   live.value = data.filter((ele) => ele.status === 'live');
 };
 
-const userVoting = (item) => {
+const userVoting = (feedbackId) => {
   
-  // Retrieve existing data from local storage
-  const storedData = JSON.parse(localStorage.getItem('feedbacks')) || [];
+    // Find the index of the feedback in the array
+    const currentFeedbackIndex = feedbacks.value.findIndex((item) => item.id === feedbackId);
 
-  // Find the index of the item in the stored data
-  const index = storedData.findIndex((storedItem) => storedItem.id === item.id);
+if (currentFeedbackIndex !== -1) {
+  const currentFeedback = feedbacks.value[currentFeedbackIndex];
 
-  if (index !== -1 && !storedData[index].isVoted) {
-    // Update the local data
-    storedData[index].isVoted = true;
-    storedData[index].upvotes++;
+  if (!currentFeedback.isVoted) {
+    // Update the feedback in the array
+    feedbacks.value[currentFeedbackIndex] = {
+      ...currentFeedback,
+      isVoted: true,
+      upvotes: currentFeedback.upvotes + 1,
+    };
 
-    // Save the modified data back to local storage
-    localStorage.setItem('feedbacks', JSON.stringify(storedData));
-    
+    // Update local storage with the modified feedbacks array
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
   }
+}
 };
-let activeTab = ref('planned')
 
+let activeTab = ref('planned')
 const toggleTab = (tab) => {
   if(tab === 'live'){
     activeTab.value = 'live'
@@ -142,7 +145,7 @@ const toggleTab = (tab) => {
                   </div>
 
                   <div class="item-footer">
-                    <div class="vote-count-box" @click="userVoting(item)">
+                    <div class="vote-count-box" @click="userVoting(item.id)">
                       <arrowUpIcon :isVoted="item.isVoted" />
                       <span class="votes">{{ item.upvotes }}</span>
                     </div>
@@ -188,7 +191,7 @@ const toggleTab = (tab) => {
               </div>
 
               <div class="item-footer">
-                <div class="vote-count-box" @click="userVoting(item)">
+                <div class="vote-count-box" @click="userVoting(item.id)">
                   <arrowUpIcon :isVoted="item.isVoted" />
                   <span class="votes">{{ item.upvotes }}</span>
                 </div>
@@ -234,7 +237,7 @@ const toggleTab = (tab) => {
                 </div>
 
                 <div class="item-footer">
-                  <div class="vote-count-box" @click="userVoting(item)">
+                  <div class="vote-count-box" @click="userVoting(item.id)">
                     <arrowUpIcon :isVoted="item.isVoted" />
                     <span class="votes">{{ item.upvotes }}</span>
                   </div>
@@ -287,7 +290,7 @@ const toggleTab = (tab) => {
                 </div>
 
                 <div class="item-footer">
-                  <div class="vote-count-box" @click="userVoting(item)">
+                  <div class="vote-count-box" @click="userVoting(item.id)">
                     <arrowUpIcon :isVoted="item.isVoted" />
                     <span class="votes">{{ item.upvotes }}</span>
                   </div>
@@ -333,7 +336,7 @@ const toggleTab = (tab) => {
               </div>
 
               <div class="item-footer">
-                <div class="vote-count-box" @click="userVoting(item)">
+                <div class="vote-count-box" @click="userVoting(item.id)">
                   <arrowUpIcon :isVoted="item.isVoted" />
                   <span class="votes">{{ item.upvotes }}</span>
                 </div>
@@ -379,7 +382,7 @@ const toggleTab = (tab) => {
               </div>
 
               <div class="item-footer">
-                <div class="vote-count-box" @click="userVoting(item)">
+                <div class="vote-count-box" @click="userVoting(item.id)">
                   <arrowUpIcon :isVoted="item.isVoted" />
                   <span class="votes">{{ item.upvotes }}</span>
                 </div>
