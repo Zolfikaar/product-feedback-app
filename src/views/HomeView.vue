@@ -7,6 +7,7 @@ import arrowUpIcon from '@/components/icons/arrowUp.vue'
 import commentsIcon from '@/components/icons/comments.vue'
 
 let feedbacks = ref([])
+let theDataExist = true
 
 const props = defineProps(['categoryFilter','topbarFilter']);
 
@@ -18,10 +19,19 @@ const getAllFeedback = async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-    let response = await axios.get('../../data.json')
-    feedbacks.value = response.data.productRequests
-    localStorage.setItem('feedbacks',JSON.stringify(feedbacks.value))
+      // Check if 'data.json' file is available
+    try {
+      let response = await axios.get('/src/data.json');
+      feedbacks.value = response.data.productRequests;
+      localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
+    } catch (error) {
+
+      // console.error("Error loading data:", error);
+
+      theDataExist = false
+    }
   }
+
 }
 
 const userVoteing = function (feedbackId) {
@@ -80,7 +90,7 @@ const filteredFeedbacks = computed(() => {
 
     <div class="content-box">
       
-      <div class="suggestion-holder" v-if="filteredFeedbacks" >
+      <div class="suggestion-holder" v-if="theDataExist" >
 
         <div class="suggestion" :class="{voted: feedback.isVoted}" v-for="feedback in filteredFeedbacks" :key="feedback">
 

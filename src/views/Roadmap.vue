@@ -23,7 +23,7 @@ onMounted(async () => {
     inProgressData(data);
     Live(data);
   } else {
-    let response = await axios.get('../../data.json');
+    let response = await axios.get('/src/data.json');
     feedbacks.value = response.data.productRequests;
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
   }
@@ -31,6 +31,8 @@ onMounted(async () => {
   if(window.innerWidth < 768){
     showTabs.value = true
   }
+
+  // console.log(feedbacks.value);
 });
 
 const plannedData = (data) => {
@@ -410,7 +412,7 @@ const toggleTab = (tab) => {
             We love hearing about new ideas to improve our app.
           </p>
           <router-link to="/new-feedback"><button class="primary"><plusIcon /> Add Feedback</button></router-link>
-        </div>
+      </div>
 
     </div>
 

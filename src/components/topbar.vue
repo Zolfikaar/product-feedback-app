@@ -25,7 +25,7 @@ onMounted( async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-    let response = await axios.get('../../data.json')
+    let response = await axios.get('/src/data.json')
     feedbacks.value = response.data.productRequests
   }
 
