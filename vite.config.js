@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/product-feedback-app/",
+  // base: "/product-feedback-app/",
   plugins: [vue()],
   resolve: {
     alias: {
