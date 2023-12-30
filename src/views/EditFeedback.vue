@@ -1,12 +1,13 @@
 <script setup>
-import { onMounted, ref, watchEffect } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+
 import leftArrowIcon from '@/components/icons/arrowLeft.vue'
 import plusIcon from '@/components/icons/plus.vue'
 import upArrowIcon from '@/components/icons/arrowUp.vue'
 import checkIcon from '@/components/icons/check.vue'
-import editFeedbackIcon from '@/components/icons/editFeedback.vue'
+import editFeedbackIcon from '@/components/icons/editFeedBackIcon.vue'
 
 const router = useRouter()
 
