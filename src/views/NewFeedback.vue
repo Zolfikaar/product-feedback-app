@@ -54,7 +54,7 @@ const loadCtegories = async () => {
     })
 
   } else {
-    let response = await axios.get('/src/data.json')
+    let response = await axios.get('../../data.json')
     categories = response.data.productRequests
 
     categories.forEach(ele => {

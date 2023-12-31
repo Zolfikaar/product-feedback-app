@@ -21,7 +21,7 @@ const getAllFeedback = async () => {
   } else {
       // Check if 'data.json' file is available
     try {
-      let response = await axios.get('/src/data.json');
+      let response = await axios.get('../../data.json');
       feedbacks.value = response.data.productRequests;
       localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
     } catch (error) {
