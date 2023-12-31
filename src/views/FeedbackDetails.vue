@@ -40,7 +40,7 @@
   })
     
   const getCurrentUserData = async () => {
-    let response = await axios.get('../../data.json')
+    let response = await axios.get('/src/data.json')
     curentUserData.value = response.data.currentUser
   } 
 

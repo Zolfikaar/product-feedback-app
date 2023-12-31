@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter, RouterView } from 'vue-router'
-import { onUpdated,onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import Sidebar from '@/components/sidebar.vue'
 import Topbar from '@/components/topbar.vue'
 
