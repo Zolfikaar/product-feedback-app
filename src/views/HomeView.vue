@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref,defineProps,computed } from 'vue'
+import { onMounted, ref,computed } from 'vue'
 import axios from "axios";
 import emptyIcon from '@/components/icons/empty.vue'
 import plusIcon from '@/components/icons/plus.vue' 
@@ -21,7 +21,7 @@ const getAllFeedback = async () => {
   } else {
       // Check if 'data.json' file is available
     try {
-      let response = await axios.get('/src/data.json');
+      let response = await axios.get('/data.json');
       feedbacks.value = response.data.productRequests;
       localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
     } catch (error) {

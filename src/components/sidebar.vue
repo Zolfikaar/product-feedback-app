@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits,onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import menuIcon from '@/components/icons/hamburger.vue'
 import closeIcon from '@/components/icons/close.vue'
@@ -27,7 +27,7 @@ const getData = async () => {
   if(localStorage.getItem('feedbacks')){
     categories = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-    let response = await axios.get('/src/data.json')
+    let response = await axios.get('/data.json')
     categories = response.data.productRequests
   }
 

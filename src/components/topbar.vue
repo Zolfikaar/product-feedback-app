@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['onFilterSelected'])
@@ -25,7 +25,7 @@ onMounted( async () => {
   if(localStorage.getItem('feedbacks')){
     feedbacks.value = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-    let response = await axios.get('/src/data.json')
+    let response = await axios.get('/data.json')
     feedbacks.value = response.data.productRequests
   }
 
