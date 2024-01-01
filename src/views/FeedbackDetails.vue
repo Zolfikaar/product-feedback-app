@@ -289,7 +289,7 @@
               <div>
 
                 <div class="user-image">
-                  <img :src="comment.user.image" alt="">
+                  <img :src="'../' + comment.user.image" alt="">
                 </div>
 
                 <div class="user-details">
@@ -331,7 +331,7 @@
                       <div>
                         
                         <div class="user-image">
-                          <img :src="reply.user.image" alt="">
+                          <img :src="'../' + reply.user.image" alt="">
                         </div>
 
                         <div class="user-details">
