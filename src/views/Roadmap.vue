@@ -23,7 +23,7 @@ onMounted(async () => {
     inProgressData(data);
     Live(data);
   } else {
-    let response = await axios.get('/data.json');
+    let response = await axios.get('https://zolfikaar.github.io/product-feedback-app/data.json');
     feedbacks.value = response.data.productRequests;
     localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value));
   }

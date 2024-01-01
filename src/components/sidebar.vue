@@ -27,7 +27,7 @@ const getData = async () => {
   if(localStorage.getItem('feedbacks')){
     categories = JSON.parse(localStorage.getItem('feedbacks'))
   } else {
-    let response = await axios.get('/data.json')
+    let response = await axios.get('https://zolfikaar.github.io/product-feedback-app/data.json')
     categories = response.data.productRequests
   }
 

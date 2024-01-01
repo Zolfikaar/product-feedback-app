@@ -40,7 +40,7 @@
   })
     
   const getCurrentUserData = async () => {
-    let response = await axios.get('/data.json')
+    let response = await axios.get('https://zolfikaar.github.io/product-feedback-app/data.json')
     curentUserData.value = response.data.currentUser
   } 
 
