@@ -40,7 +40,7 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Link](https://your-solution-url.com)
+- Solution URL: [Link](https://www.frontendmentor.io/solutions/product-feedback-app-vue-BEn_yd198E)
 - Live Site URL: [Link](https://zolfikaar.github.io/product-feedback-app/)
 
 ## My process
